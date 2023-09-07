@@ -1,27 +1,57 @@
-// MİDDLEWARE nedir ve nasıl kullanılır -> 
+// Routing işlemleri -> routing işlemleri de aslında midleware işlemlerine benzer şekilde çalışır.
 
 const express = require("express");
 const app = express(); 
 
-    app.use( (req ,res, next) => {
-        console.log("middleware 1");
-        next()
+
+
+
+    app.use( "/blogs/:blogid/user/:username", (req ,res, next) => {
+//aslında biz burda /blogs/5 demek yerine /blogs/:blogid gibi bir değişken vermemiz gerekir. Bu sayede 67 nolu id ye sayif sayfay, veri tabanından sorgulayacağız ona göre bilgi yönlendirmesi yapacağız bu sayede sayfa başlığı sayfa görseli id numarasına göre yönlendireceğiz.
+// buradaki :blogid bilgisini req.params sayesinde erişeceğiz.
+// console.log(req.params); yazarsak { blogid : "56" } şeklinde gelir ama biz req.params.blogid yazarsak direk id numarasını verir.
+// blogs/:blogid/user/username -> burada blog user sabit değerlerdir aslında birşey yazmadan önce neyin geleceğini yazıyoruz gibi düşünülebilir.
+// bu sayede biz /blogs/5/user/ahmet yazarsak req.params.blogid = 5 ve req.params.username = ahmet olur.
+
+        console.log(req.params.blogid);
+        console.log(req.params.username);
+        res.send("burası blog detay sayfası")
+
     }  )
 
-    app.use( (req ,res, next) => {
-        console.log("middleware 2");
-        res.end("middleware 2")  /*ya da res.send(<h1>home</h1>) diyerek sayfaya bir yazı yazı yazdırabilirdik  */
+    app.use( "/blogs", (req ,res, next) => {
+        res.send("burası blogs")
+
     }  )
 
-// res.end dediğim zaman çalışma sürecine aslında son vermiş oluyoruz. Bu yüzden middlewre 1 den middleware 2 ye geçmiş olmuyor. Eğer ikisinde de end olmazsa yine middleware 2 ye geçmez bu seferde bir sonrakine geç diye bir komut vermediğimiz için middleware 1 de kalır. o yüzden 3. parametre olarak next parametresi alır. Buda bu fonksiyonda benim işim bitti bir sonrakine geç demek için kullanılır.
+    app.use( "/", (req ,res, next) => {
+        res.send("burası anasayfa")
+ 
+    }  )
 
-// Bu sefer fonksiiyondaki işlemleri yaptım sonra geç dedik bir sonraki fonksiyona geçti, 2. fonksiyonda da işlemi yaptırdık ve daha sonra da dur demiş olduk.
-
-//middleware yi nerde kullanırız -> mesela biz gelen bir requestin herhangi bir özelliğine balabiliyorduk. mesela sayfa urlsi, method bilgisine bakabiliyoruz. Gelen bu req bilgisinde kullanıcının isteğine göre uygulamada herhangi bir code bloğunu çalıştırabiliyoruz. 
-
+    /* bu hiyerarşide / sayfası en üstde olsa biz url yi değiştirksekde sürekli olarak / sayfası gözükür çünkü routes sayfası ne başa balar / varsa direk onu alır, o yüzden bizim en özel url ye sahip fonksiyonu en üste koymamız gerekir.
+    eğer biz blogs/6 diye bir çağırma yaparsak /blogs/5 karşılamayacağı için /blogs sayfasına düşer.
     
+    
+    */
+
+
+
+
+
+
+
     app.listen(3000 , () => {
         console.log("Server started on port 3000");
     })
+
+    /*
+        routing işleminde eskiden
+        if (req.url == "/" && req.method="GET") {
+            res.end("index sayfası")
+        }
+        şeklinde uzun uzun yazıyorduk ama bunlara gerek yok. Routing işlemi use içerisinde kolaylaştırılmış. use nin ilk parametresine bir url verebiliyoruz  bu sayede verdiğin urldeki sayfa çalışır.
+    
+    */
 
 
