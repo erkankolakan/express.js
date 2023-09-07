@@ -1,25 +1,27 @@
-const express = require("express");
-//nodemon paketi ile projede bir değişiklik olduğu zaman otomatik bir şekilde serveri kendisi başlatsı diye kullanıyoruz.Bu paketi
-// npx nodemon ile çalıştırıyoruz. nodemon varsayılan olraka app.js dosyasını çalıştırı eğer ki biz index.js dosyasını çalıştırmak isterkse
-// npx nodemon index.js yazmamız gerekir
-// "scripts": {
-//     "test": "echo \"Error: no test specified\" && exit 1",
-//     "start":"npx nodemon"
-//   }, package.json da scrip kısmımız var biz her seferinde uzun uzun npx nodemone veya npx nodemone index.js yazmaktansa biz script içerisisene bir değişken ismiyle çalıştırmak istediğimiz komutu yazabiliriz. artık uzun uzun yazmaktansa npm start dememiz yeterli olacaktır.
+// MİDDLEWARE nedir ve nasıl kullanılır -> 
 
+const express = require("express");
 const app = express(); 
 
-
-    app.use( (req ,res) => {
-        res.end("selam dunya ben massaka") 
+    app.use( (req ,res, next) => {
+        console.log("middleware 1");
+        next()
     }  )
 
-    
-    //req talebi yapıldığı zaman bunu karşılayacak bir fonksiyona ihityaç var. bizde bunu !!! app.use !!! ile gelen req değerlerine karşılık res değerini döndüre biliriz.
+    app.use( (req ,res, next) => {
+        console.log("middleware 2");
+        res.end("middleware 2")  /*ya da res.send(<h1>home</h1>) diyerek sayfaya bir yazı yazı yazdırabilirdik  */
+    }  )
 
+// res.end dediğim zaman çalışma sürecine aslında son vermiş oluyoruz. Bu yüzden middlewre 1 den middleware 2 ye geçmiş olmuyor. Eğer ikisinde de end olmazsa yine middleware 2 ye geçmez bu seferde bir sonrakine geç diye bir komut vermediğimiz için middleware 1 de kalır. o yüzden 3. parametre olarak next parametresi alır. Buda bu fonksiyonda benim işim bitti bir sonrakine geç demek için kullanılır.
+
+// Bu sefer fonksiiyondaki işlemleri yaptım sonra geç dedik bir sonraki fonksiyona geçti, 2. fonksiyonda da işlemi yaptırdık ve daha sonra da dur demiş olduk.
+
+//middleware yi nerde kullanırız -> mesela biz gelen bir requestin herhangi bir özelliğine balabiliyorduk. mesela sayfa urlsi, method bilgisine bakabiliyoruz. Gelen bu req bilgisinde kullanıcının isteğine göre uygulamada herhangi bir code bloğunu çalıştırabiliyoruz. 
+
+    
     app.listen(3000 , () => {
         console.log("Server started on port 3000");
     })
 
 
-// dependencies kısmındaki pakerler projede kullanılan paketlerdir, ama ben projeyi geliştirirken çeşitli paketler kullanabilir bunların projeyi halka açarken fazla yer kaplamasın diye dependencies kısmında değilde uygulamayı geliştirken kullanılan dev-dependencies kısmında tutulması lazım. Orada tutabilmek içinde npm i paket-adi --save-dev şeklinde yapmamız gerekir. Bu sayade sadece projemi paylaşırken dependecies kısmındaki dosyaları paylaşmama eterli olacaktır.
