@@ -1,11 +1,17 @@
 const express = require("express");
+//nodemon paketi ile projede bir değişiklik olduğu zaman otomatik bir şekilde serveri kendisi başlatsı diye kullanıyoruz.Bu paketi
+// npx nodemon ile çalıştırıyoruz. nodemon varsayılan olraka app.js dosyasını çalıştırı eğer ki biz index.js dosyasını çalıştırmak isterkse
+// npx nodemon index.js yazmamız gerekir
+// "scripts": {
+//     "test": "echo \"Error: no test specified\" && exit 1",
+//     "start":"npx nodemon"
+//   }, package.json da scrip kısmımız var biz her seferinde uzun uzun npx nodemone veya npx nodemone index.js yazmaktansa biz script içerisisene bir değişken ismiyle çalıştırmak istediğimiz komutu yazabiliriz. artık uzun uzun yazmaktansa npm start dememiz yeterli olacaktır.
 
-
-const app = express(); // express aslında bizim için bir fonksiyonu bir uygulamayı ifade biz de atadığımız değer üzerinden ki burada atadığımız değer app'dir app üzerinden req ve res değerlerini kontol edeceğim.
+const app = express(); 
 
 
     app.use( (req ,res) => {
-        res.end("selam dunya") //uygulamaya herhangi bir sorgu geldiği zaman direk durdur cevabını verecektir.
+        res.end("selam dunya ben massaka") 
     }  )
 
     
@@ -16,32 +22,4 @@ const app = express(); // express aslında bizim için bir fonksiyonu bir uygula
     })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// dependencies kısmındaki pakerler projede kullanılan paketlerdir, ama ben projeyi geliştirirken çeşitli paketler kullanabilir bunların projeyi halka açarken fazla yer kaplamasın diye dependencies kısmında değilde uygulamayı geliştirken kullanılan dev-dependencies kısmında tutulması lazım. Orada tutabilmek içinde npm i paket-adi --save-dev şeklinde yapmamız gerekir. Bu sayade sadece projemi paylaşırken dependecies kısmındaki dosyaları paylaşmama eterli olacaktır.
