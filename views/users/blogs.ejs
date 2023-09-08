@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
-    <title><%=title%> - BlogApp</title> 
+    <!-- tüm html sayfasında head kısmı aynı olduğu için onuda partials içine koyduk ve html sayfalarına çağırdık -->
+ <%- include('../partials/head') %>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-        <div class="container">
-            <a href="/" class="navbar-brand">Blogapp</a>
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"> 
-                    <a href="/blogs" class="nav-link">Blog listesi</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+
+<!-- oluşturmuş olduğumuz parçayı buraya da çağırıyoruz ! ejs de bir html öğesiini çağırken - kullanılır -->
+    <%- include('../partials/nav') %> 
+
 
     <div class="container mt-3 ">
         <div class="row">
@@ -51,30 +43,10 @@
             </div>
         </div>
     </div>
-    <% }) %>
+    <% }) %>    
 
-    <!-- sayfaya gelen değer sayısı 3 den büyükse ve eğer gelen bilgiler onaylıysa pagination sayfaya gelir -->
-    <% if (blogs.filter(b => b.durum).length> 3) { %>  
-        <!-- pagination  -->
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a href="" class="page-link">Geri</a>
-                    </li>
-                    <li class="page-item active">
-                        <a href="" class="page-link">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="" class="page-link">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="" class="page-link">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="" class="page-link">İleri</a>
-                    </li>
-                </ul>
-            </nav>
+    <% if (blogs.length >= 3) { %>  
+        <%- include('../partials/pagination') %>
     <%}%>
 
 

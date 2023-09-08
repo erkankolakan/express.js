@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
-    <title><%=title%> - BlogApp</title> 
+    
+    <%- include('../partials/head') %>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-        <div class="container"> 
-            <a href="/" class="navbar-brand">Blogapp</a>
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"> 
-                    <a href="/blogs" class="nav-link">Blog listesi</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    
+<!-- partials views (parçalı viewler) aslında birer component mantığıyla çalışır enjinclude ile oluşturduğumuz parjaları istediğimiz yere çağırabiliriz -->
+    <%- include('../partials/nav') %> 
 
     <div class="container mt-3 ">
         <div class="row">
@@ -32,7 +23,7 @@
                 <h1 class="h3 mb-3">
                     <%=title%> 
                 </h1>
-                
+
 <% blogs.forEach(element => { %>
     <% if (element.anasayfa) { %>
         <div class="card mb-4">
