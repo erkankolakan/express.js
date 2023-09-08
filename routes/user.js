@@ -6,19 +6,17 @@ const router = express.Router();
 
 
 
-
-
-
-router.use( "/blogs/:blogid", (req ,res, next) => {
-    res.sendFile(path.join(__dirname, "../views/users","blogDetails.html")) 
+router.use( "/blogs/:blogid", (req ,res) => {
+    res.render("users/blogDetails")
 }  )
 
-router.use( "/blogs", (req ,res, next) => {
-    res.sendFile(path.join(__dirname, "../views/users","blogs.html"))
+
+router.use( "/blogs", (req ,res) => {
+    res.render("users/blogs")
 }  )
 
-router.use( "/", (req ,res, next) => {
-    res.sendFile(path.join(__dirname, "../views/users","index.html"))
+router.use( "/", (req ,res) => {
+    res.render("users/index")
 }  )
 
 module.exports= router
