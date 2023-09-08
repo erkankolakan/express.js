@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-        <div class="container">
+        <div class="container"> 
             <a href="/" class="navbar-brand">Blogapp</a>
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"> 
@@ -38,59 +38,31 @@
                 <h1 class="h3 mb-3">
                     <%=title%> 
 <!-- srouter altındaki user sayasından dönderiğimiz data jsonun altındaki title bilgisine bu şekilde erişiyoruz, bir extensio ile ejs yi okunabilir hale getiriyoruz.-->
-
                 </h1>
-                <div class="card mb-4">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img src="/static/images/3.jpg" class="img-fluid" alt="">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Node.js ile Sıfırdan İleri Seviye Web Geliştirme
-                                    </h5>
-                                    <p class="card-text">
-                                        Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.
-                                    </p>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-3">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="/static/images/1.jpg" class="img-fluid" alt="">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    Python ile Sıfırdan İleri Seviye Python Programlama
-                                </h5>
-                                <p class="card-text">
-                                    Sıfırdan İleri Seviye Python Dersleri.Veritabanı,Veri Analizi,Bot Yazımı,Web Geliştirme(Django)
-                                </p>
-                            </div>
-                    </div>
-                </div>
+<% blogs.forEach(element => { %>
+    <div class="card mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="/static/images/<%= element.resim%>" class="img-fluid" alt="">
             </div>
-            <div class="card mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="/static/images/2.jpg" class="img-fluid" alt="">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                Sıfırdan İleri Seviye Modern Javascript Dersleri ES7+
-                            </h5>
-                            <p class="card-text">
-                                Modern javascript dersleri ile (ES6 & ES7+) Nodejs, Angular, React ve VueJs için sağlam bir temel oluşturun.
-                            </p>
-                        </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">
+                       <%= element.baslik %>
+                    </h5>
+                    <p class="card-text">
+                        <%= element.aciklama %>
+                    </p>
                 </div>
             </div>
         </div>
+    </div>
+ 
+<% }) %>
+
+
+
+
             </div>
         </div>
     </div>
