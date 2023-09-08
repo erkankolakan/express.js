@@ -1,39 +1,28 @@
-// STATİK DOSYALAR -> statik dosyalarla çalışırken (css,html,js,img) bazı ayarlamalar yapmamız gerekir. Çünkü rastgele proje klasörleri erşime açık değildir. Bizim bu dosyaları erişime açmamız gerekir, yani ilgili statik dosyaların bir http talebi almaları gerekir bunun ektra bir ayara ihtiyacı var.
-// Bunun bir middleware kullanıyoruz, express.js de app.use(express.static("açmakistediğimiz klasör ismini veriyoruz")) biz bu klasör isminine genelde public diyerek çağırıyoruz bu sayede altına yazmış olduğumuz css html js dosyaları public bir şekilde yayınlanabilir oluyor, ayar sayesinde public klasörüne erişim sağlanır. Bu klasörün içindeki dosyaları erişime açar.
+// Express Router -> bu derste express.js router kavramını öğrenelim ve app.js dosyası içerisinde bulunan rouute yapılarını ayrı bir module içerisine alalım ve tabiki projemiz büyüyor bu yüzden dolayı herşe düzenli olsun ki projeye müdahale ederken bir sıkıntı yaşamayalım. Yani app.js dosyası kalabalık hale gelmesin, bunları parçalayarak ayrı bir dosya içerisine alalım. 
 
 const express = require("express");
 const app = express(); 
 const path = require("path") 
+const userRoutes = require("./routes/user") //routeleri başka bir klasörde oluşturduk ve onları buraya çağırıyoruz.
+const adminRoutes = require("./routes/admin") //routeleri başka bir klasörde oluşturduk ve onları buraya çağırıyoruz.
 
-app.use("/libs" ,express.static("node_modules")) //-> public klasörü altındaki tüm dosyları erişime açtık. 
-//app.use("/libs" , express.static("public")) -> dersek ilk parametre bizim erişime açtığımız dosyalara erişirken onlara takma isim vermemizi sağlıyor.
-app.use("/static",express.static("public"))
-/*
-    bu şekilde erişimde zorlanıyorsak projenin ana dizininden direke erişebiliriz.
-    app.use("xxx", express.static(path.join(__dirname , "node_modules yapabiliriz"))) 
-    app.use("yyy" express.static(path.join(__dirname , "public")))
-*/
+app.use("/libs" ,express.static(path.join(__dirname,"node_modules")))
+app.use("/static",express.static(path.join(__dirname,"public")))
 
-    app.use( "/blogs/:blogid", (req ,res, next) => {
-        //global değişkenimiz var __dirname ve __fileName şeklinde
-        console.log(__dirname); // -> projenin bulunduğumuz klasör (ör/express.js)
-        console.log(__filename); // -> o anda bulunduğumuz klasör (ör/app.js)
 
-        res.sendFile(path.join(__dirname, "views/users","blogDetails.html")) //-> path.join ile dosyaları birleştiriyoruz.
-       
-    }  )
-
-    app.use( "/blogs", (req ,res, next) => {
-        res.sendFile(path.join(__dirname, "views/users","blogs.html"))
-    }  )
-
-    app.use( "/", (req ,res, next) => {
-        res.sendFile(path.join(__dirname, "views/users","index.html"))
-
-    }  )
+    app.use("admin",adminRoutes); //-> bu ksımda router modülünde tek tek yazmaktansa bu şekilde tek seferde admin yazmaj daha cazip :D
+    app.use(userRoutes); //burda oluşturmuş olduğumuz routesleri bir middleware olarak çağırıyoruz. 
 
     app.listen(3000 , () => {
         console.log("Server started on port 3000");
     })
 
+/*
+yaptıklarımızı özetliyelim
+app.js sayfası içerisinde yönetici veya kullanıcı için gerekli olan rooutes yapılarını tek tek app.js yazabiliriz ama karmaşıklık olmasın, okunabilirliği arttırmak için ayrı bir module içerisine alabiliriz ve daha sonra ana sayfamıza çağırabiliriz. 
+Ayrı bir module içerisine aldığımzı zaman artık app üzerinden değil router üzerinden routes sistemimizi kuruyoruz.
+router üzerinden çağırmamızın nedeni nede olsa biz uygulama içersine bir middleware eklemiş olmuyoruz. Route yapacapımız öğeleri ilk once express üzerinden çağırıdığımız router içersine atıyoruz ve daha sonra ana sayfamda bu kurmuş olduğum router düzenini bir middleware içerisine çağırıyoruz. 
+
+
+*/
 
