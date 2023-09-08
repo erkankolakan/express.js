@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
-    <title>Document</title>
+    <title><%=title%> - BlogApp</title> 
+    <!-- burdaki title bilgisinide dinamik hale getiriyoruz. -->
 </head>
 <body>
     <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
@@ -22,14 +23,23 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="list-group">
-                    <a href="" class="list-group-item list-group-item-action active">Web Geliştirme</a>
-                    <a href="" class="list-group-item list-group-item-action ">Mobil Uygulamalar</a>
-                    <a href="" class="list-group-item list-group-item-action ">Veri Analizi</a>
-                    <a href="" class="list-group-item list-group-item-action ">Programlama</a>
+
+    <% categories.forEach(element => { %>
+        <a href="" class="list-group-item list-group-item-action"><%= element %></a>
+        <!-- user.js den göndermiş olduğumuz datan üzerinden burada categories dizesine ulaşıyoruz  -->
+
+    <% }) %>
+
+<!-- biz bir değişkenin içerisindeki bir bilgiye ulaşmak istediğimiz zaman <%= %> kullanırken normal bir ejs bloğu oluşturuken sadece <% %> kullanıyoruz. -->
+
                 </div>
             </div>
             <div class="col-md-9">
-                <h1 class="h3 mb-3">Anasayfa</h1>
+                <h1 class="h3 mb-3">
+                    <%=title%> 
+<!-- srouter altındaki user sayasından dönderiğimiz data jsonun altındaki title bilgisine bu şekilde erişiyoruz, bir extensio ile ejs yi okunabilir hale getiriyoruz.-->
+
+                </h1>
                 <div class="card mb-4">
                         <div class="row">
                             <div class="col-md-4">

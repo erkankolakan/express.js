@@ -1,4 +1,5 @@
-// EJS 
+// SAYFAYA DİNAMİK YAPILARA GÖNDERMEK ->Dinamik bir veriyle nasıl çalışacağız onu öğrenelim.
+
 const express = require("express");
 const app = express(); 
 const path = require("path") 

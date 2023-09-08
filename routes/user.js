@@ -1,9 +1,11 @@
-//burası kullanıcı sayfaları. 
-const path = require("path")
 const express = require("express");
 const router = express.Router();
-//Artık routerleri direk middleware olarak app.js içerisine eklemek yerine bunları kendi içerisinde kapsam içerisine alacağız ve bu kapsamı dışarıya açacağız export etmiş olduğumuz burdaki routerler ise ana uygulama içerisinde bir middleware olarak eklemiş olacağız. 
 
+const data =  {
+    title:"Popüler Kurslar", //-> burdaki bilgiler ileriki dönemlerde veri tabanından gelecektir.
+    categories:["Web Geliştirme","Mobil Uygulamalar","Veri Analizi","Programlama","Ofis Uygulamaları"]
+// tabiki burada tanımlamış olduğumuz liste bilgiside veri tabınından gelecek ve biz yönetim paneli aracılığıyla buradaki bilgileri veri tabanında kalıcı bir dosya bir exel dosyası gibi düşünebiliriz, bu kalıcı dosyaya saklıyacağız ve biz uygulamayı çağırdığımız anda bu dosyaya bir sorgu gönderilecek ve bu bilgiler bize gelecek 
+}
 
 
 router.use( "/blogs/:blogid", (req ,res) => {
@@ -16,7 +18,7 @@ router.use( "/blogs", (req ,res) => {
 }  )
 
 router.use( "/", (req ,res) => {
-    res.render("users/index")
+    res.render("users/index" , data) //-> üsteki değişkeni index sayfasına göndermek için renden methodunun 2. parametresine yazarak gönderiyoruz. Artık data üzerinden title ye erişebiliyoruz.
 }  )
 
 module.exports= router
