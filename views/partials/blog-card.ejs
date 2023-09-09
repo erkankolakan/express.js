@@ -6,7 +6,8 @@
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title">
-                       <%= baslik %>
+                     <a style="text-decoration:none" href="/blogs/<%= blogid %>"> <%= baslik %> </a>  
+<!-- blogid değeri tıkladığımız verinin id numarasıdır, id numaralarını biz veri tabanında vermiştik tıkladığımız da tıkladığımızın id numarasına göre url de id yi göstericek -->
                     </h5>
                     <p class="card-text">
                         <%= aciklama %>
