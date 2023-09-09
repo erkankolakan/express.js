@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <%- include('../partials/head') %>
 </head>
 <body>
     
-<!-- partials views (parçalı viewler) aslında birer component mantığıyla çalışır enjinclude ile oluşturduğumuz parjaları istediğimiz yere çağırabiliriz -->
+<!-- PARTİAL VİEW'E VERİ GÖNDERME -> partials view e dışardından bir veri nasıl gönderilir öğrenelim  -->
+
     <%- include('../partials/nav') %> 
 
     <div class="container mt-3 ">
         <div class="row">
             <div class="col-md-3">
-                <div class="list-group">
 
-    <% categories.forEach(element => { %>
-        <a href="" class="list-group-item list-group-item-action"><%= element %></a>
-    <% }) %>
-            </div>
+                <%- include('../partials/category-menu' , categories) %> 
+
             </div>
             <div class="col-md-9">
                 <h1 class="h3 mb-3">
@@ -26,29 +23,9 @@
 
 <% blogs.forEach(element => { %>
     <% if (element.anasayfa) { %>
-        <div class="card mb-4">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="/static/images/<%= element.resim%>" class="img-fluid" alt="">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                           <%= element.baslik %>
-                        </h5>
-                        <p class="card-text">
-                            <%= element.aciklama %>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <%- include('../partials/blog-card' ,element)  %>
     <% } %>
-
- 
 <% }) %>
-
-
 
 
             </div>
