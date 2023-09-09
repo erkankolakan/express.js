@@ -21,11 +21,11 @@
                 </h1>
 
 <% blogs.forEach(element => { %>
-    <% if (element.anasayfa) { %>
-        <%- include('../partials/blog-card' ,element)  %>
-    <% } %>
-<% }) %>
 
+<!-- normalde bu burası if ile sarmalıydı element.anasayfa && element.onay diyerek filitre yapıyorduk amam buna gerek yok artık veriyi çekerken filitreleme işlemi yapıyoruz. -->
+        <%- include('../partials/blog-card' ,element)  %>
+
+<% }) %>
 
             </div>
         </div>

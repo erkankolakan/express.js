@@ -1,0 +1,21 @@
+//bu sayfa sayesinde her sayfada veri tabanımızı kolayca çağırabilir ve bilgileri çekebiliriz.
+const mysql = require("mysql2") 
+const config = require("../config")
+
+const connection = mysql.createConnection(config.db)
+
+
+connection.connect((err) => { 
+    if (err) {
+    return console.log(err);
+    }
+    console.log("Bağlantı başarılı");
+})
+
+module.exports = connection.promise()
+
+/*
+
+    connection objesini dışarı gönderiyoruz ama biz bu objeyi geriye promis olarak göndermek istiyorum. Promis olarak gönderip then ve cath bloglarıyla bu obje üzerinden bir sorguyu veri tabanına gönderebilirim.
+
+*/

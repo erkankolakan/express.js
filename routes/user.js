@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const db = require("../data/db")
 
 const data =  {
     title:"Popüler Kurslar", 
@@ -40,18 +41,43 @@ const data =  {
     ]
 }
 
-
 router.use( "/blogs/:blogid", (req ,res) => {
     res.render("users/blogDetails")
 }  )
 
-
 router.use( "/blogs", (req ,res) => {
-    res.render("users/blogs", data) 
+    db.query("select * from blog where onay=1")
+        .then(result => {
+            res.render("users/blogs" , {
+                title:"Tüm Kurslar",
+                blogs:result[0], 
+                categories: data.categories
+            })
+        }) 
+        .catch(err => {
+            console.log(err);
+        }) 
 }  )
 
 router.use( "/", (req ,res) => {
-    res.render("users/index" , data)
+    db.query("select * from blog where onay=1 and anasayfa=1") 
+        .then(result => {
+            res.render("users/index" , {
+                title:"Popüler Kurslar",
+                blogs:result[0], 
+                categories: data.categories
+            })
+        }) 
+        .catch(err => {
+            console.log(err);
+        }) 
 }  )
-
 module.exports= router
+
+// biz select * ile tüm verileri getiriyoruz, getirdikten sonra filitreleme işlemi yapıyoruz 99988989 tane veri olsa 99988989 tanesini de çekecek. Ama biz çekerken filitreleme işlemi yaparsak bize lazım olan kadar veri çekmiş olacağız. Bunun içinde
+// where = diyerek biz tablodaki veriye koşul ekliyebiliyoruz.
+
+//boolean değerin karşılığı aslında 0 1 dir -> 1 = true , 0 = false
+
+// db.query("select * from blog where onay=1 and anasayfa ")  -> iki koşuluda sağlasın istiyorsak AND
+// db.query("select * from blog where onay=1 && or anasayfa ") -> iki koşuldan biri sağlanırsa da olur demek istiyorsak OR 
