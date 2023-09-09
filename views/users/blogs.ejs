@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- tüm html sayfasında head kısmı aynı olduğu için onuda partials içine koyduk ve html sayfalarına çağırdık -->
  <%- include('../partials/head') %>
 </head>
 <body>
 
-<!-- oluşturmuş olduğumuz parçayı buraya da çağırıyoruz ! ejs de bir html öğesiini çağırken - kullanılır -->
     <%- include('../partials/nav') %> 
 
 
@@ -14,7 +12,6 @@
         <div class="row">
             <div class="col-md-3">
 
-<!-- Burada static bir sayfa oluşturmuyoruz dinamik bir sayfa oluşturuyoruz o yüzeden içeri bir veri tabanından gelen bir değişken göndermemiz gerekir onuda 2. parametre ile gönderiyoruz -->
         <%- include('../partials/category-menu' , categories) %> 
         
     </div>

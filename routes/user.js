@@ -26,7 +26,7 @@ const data =  {
             baslik:"Sıfırdan İleri Seviye Modern Javascript Dersleri ES7+",
             aciklama:"Modern javascript dersleri ile (ES6 & ES7+) Nodejs, Angular, React ve VueJs için sağlam bir temel oluşturun.",
             resim:"3.jpg",
-            anasayfa:true, // burası ana sayfada olmasın diyebilmek için bu şekilde diyoruz.   
+            anasayfa:true,
             durum:true
         },
         {
@@ -34,7 +34,7 @@ const data =  {
             baslik:"Sıfırdan Uygulamalı React Geliştirme: Hooks, Redux & Firebase",
             aciklama:"En popüler frontend kütüphanesi React'i baştan sona uygulamalı projelerle öğren. Hooks, Redux, Webpack, Firebase ve Fazlası.",
             resim:"4.jpg",
-            anasayfa:false, // burası ana sayfada olmasın diyebilmek için bu şekilde diyoruz.     
+            anasayfa:false,
             durum:true
         },
     ]
@@ -47,7 +47,7 @@ router.use( "/blogs/:blogid", (req ,res) => {
 
 
 router.use( "/blogs", (req ,res) => {
-    res.render("users/blogs", data) // blogs sayfasında da kullancağamız için burayada data objesini göndermemiz gerekir. 
+    res.render("users/blogs", data) 
 }  )
 
 router.use( "/", (req ,res) => {
