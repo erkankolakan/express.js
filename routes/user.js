@@ -2,26 +2,48 @@ const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
 
+
+//en özel link en üstde bulur
+
+router.use("/blogs/category/:categoryid" , async (req , res) => {
+    const id = req.params.categoryid //burada yine gittiği id yi alıyoruz
+
+    try {
+        const [blogs, ] = await db.query("select * from blog where categoryid=?" , [id]) //burada gelen id ye göre blogları çekiyoruz
+        const [categories, ] = await db.query("select * from category") 
+
+        res.render("users/blogs" , {
+            title:"Tüm Kurslar",
+            blogs:blogs, 
+            categories:categories
+        })
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+
 router.use( "/blogs/:blogid", async(req ,res) => {
 
-    const id = req.params.blogid //url deki blogid kısımına yazılan id değerini alır oldukça önemlidir. Gelen bilgi olduğu için req le alıyoruz.
+    const id = req.params.blogid 
 
     try {
         const [blog, ] = await db.query("select * from blog where blogid=?", [id])
-        // const [blogs, ] = await db.query("select * blog where blogid=? and baslik=?", [id , baslik]) eğer iki tane belirleyicimiz olsa bu şekilde yapardık.
-
-        if (blog[0]) { //bu şekilde yapmamızın sebebi bizde sadece 4 tane id var kullanıcı gidip url de 4651531 yazarsa uygulama takılır biz takılmasını istemediğimiz için geçersiz bir blogid değeri geldiği zaman bizi direk index atsın diye
+      
+        if (blog[0]) { 
             return res.render("users/blogDetails" , {
-            title: blog[0].baslik, //bunu direk blogDetail sayfasında kullanmasakda parçalar klasöründe head kullanıyor o yüzden göndermemiz gerek
-            blog: blog[0], //blog[0] ı blogDetails sayfasına blog adıyla gönderdir şimdi blogDetails dan karşılaman gerekir 
+            title: blog[0].baslik,
+            blog: blog[0], 
         })}
-        res.redirect("/") //retun a girerse onun aşağısındaki kodlar çalışmayacağı için gönül rahatlığıyla bu şekilde yazabiliriz 
+        res.redirect("/") 
 
     } catch (error) {
         console.log(error);
     }
-
-}  )
+})
 
 router.use( "/blogs", async(req ,res) => {
     try{
