@@ -16,7 +16,7 @@ router.use("/blogs/category/:categoryid" , async (req , res) => {
             title:"Tüm Kurslar",
             blogs:blogs, 
             categories:categories,
-            secilenCategory:id,
+            secilenCategory:id, //url den gelen id değerini gönderiyoruz
         })
         
     } catch (error) {
