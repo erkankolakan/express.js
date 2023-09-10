@@ -1,11 +1,11 @@
-// Uygulama ile server arasında bağlantıyı kurduk artık sql sorguları yapabilyoruz -> BLOG İÇİN VERİ TABANINDAN VERİ ÇEKELİM
 const express = require("express");
 const app = express(); 
 const path = require("path") 
 const userRoutes = require("./routes/user") 
 const adminRoutes = require("./routes/admin")
 
-//data bilgilerini componenet giib başka sayfada oluşuturp öyle require yapıyoruz ki her sayfa veri bilgilerine erişebilsin erişebilsin
+
+app.use(express.urlencoded())// biz bunu yazdığımız zaman post işleminde gelen veriler bize json formatında gelecekir. Eğer bunu yazmazsak gelen veri undifened olacaktır
 
 app.set("view engine","ejs")
 
