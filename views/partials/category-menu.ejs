@@ -1,8 +1,12 @@
 <div class="list-group">
-    <a href="/blogs" class="list-group-item list-group-item-action active">Tüm Katagoriler</a>
+    <a href="/blogs" class="list-group-item list-group-item-action">Tüm Katagoriler</a>
     <% categories.forEach(element => { %>
-        <a href="/blogs/category/<%= element.category_id %>" class="list-group-item list-group-item-action"><%= element.name %></a>
+        <a href="/blogs/category/<%= element.category_id %>"
+            class="list-group-item list-group-item-action
+            <%= secilenCategory == element.category_id ? "active" : " "  %>
+            ">
+        <%= element.name %>
+    </a>
     <% }) %>
 </div>
 
-<!-- herahngi bir kategoriye tıkladığımız zaman tıkladığımız katagoronin id numarsına göre url dedğişir. Url den gelen id numarası ile blogs daki katagory bilgileri tutarsa bizim önümüze blog sayaları çıkar -->

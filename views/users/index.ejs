@@ -12,17 +12,18 @@
         <div class="row">
             <div class="col-md-3">
 
-                <%- include('../partials/category-menu' , categories) %> 
+                <%- include('../partials/category-menu' , {categories , secilenCategory}) %> 
+
+<!-- normalde category-menu parçasına categories i göndermeme gerek yok zaten biz bu index.ejs sayfasına categories i gönderiyoruz, parçamızda bu sayfaya çağırdığımız için gelen sayfasa bir daha categories i göndermek saçma olacaktır. Biz sadece okunabilirliği arttırmak için bu şekilde oraya gönderiğimiz değeri yazıyoruz.-->
 
             </div>
             <div class="col-md-9">
-                <h1 class="h3 mb-3">
+                <h1 class="h3 mb-3"> 
                     <%=title%> 
                 </h1>
 
 <% blogs.forEach(element => { %>
 
-<!-- normalde bu burası if ile sarmalıydı element.anasayfa && element.onay diyerek filitre yapıyorduk amam buna gerek yok artık veriyi çekerken filitreleme işlemi yapıyoruz. -->
         <%- include('../partials/blog-card' ,element)  %>
 
 <% }) %>
