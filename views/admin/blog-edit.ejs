@@ -12,7 +12,9 @@
             <div class="col-md-12 mt-3">
             
                 <form method="post">
-                    <div class="row mb-3">
+                    <input type="hidden" name="blogid" value="<%= blog.blogid %>">
+<!-- kullanıcı url den :blogid kısmı değiştirsede ve aciklama baslik gibi değer güncellerse url de yazdığğı değeri güncellemiş olur. ör/ tıkladığı blogid değeri 2 url de bu yüzden 2 yazar kullanıcı gidip url deki 2 yerine 4 yazarsa güncellemiş olduğu aciklama baslik değerleri 4 blogid değerine sahip blogu güncellemiş olur. O yüzden biz bunu engellemek için kullanıcı hangi blog a tıklarsa o blogun blogid değeri blogid namesi ile body sayesinde bize gelmiş olur biz de bu değeri çekersek ve req.params.blogid yerine req.body.blogid değerini alırsak ona göre veri güncelleme işlemi yaparsak açık bırakmadan bu işlemi tamamlamış oluruz.  -->
+                    <div class="row mb-3"> 
                         <label for="baslik" class="col-sm-2 col-form-label">Başlık</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="baslik" name="baslik" value="<%= blog.baslik %>">
@@ -50,26 +52,10 @@
     </div>
     </div>
 
-<!-- 
-    <select name="kategori" id="kategori" class="form-select">
-        <option value="-1">Kategori Seçiniz</option>
-        <% categories.forEach(category => { %>
-            <% if (category.category_id == blog.categoryid) { %>
-                <option value="<%= category.category_id %>" selected ><%= category.name %></option>
-            <% } else { %>
-                <option value="<%= category.category_id %>"  ><%= category.name %></option>
-            <% }  %>
-        <% }) %>
-    </select>
-
-    İKİ ŞEKİLDE DE SEÇTİĞİMİZ BLOĞA GÖRE DEĞER SEÇEBİLİRİZ
--->
-                    
     <div class="row mb-3">
         <div class="col-sm-8 offset-sm-2">
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="anasayfa" name="anasayfa" <%= blog.anasayfa?"checked":"" %>/> 
-            <!-- checked özelliği vermemiz check boxın seçili olarak gelmesini sağlar. Biz burda kontol ediyoruz true olarak geldiyse checked et diyoruz -->
             <label class="form-check-label" for="anasayfa">
                 Anasayfa
             </label>
