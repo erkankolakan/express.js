@@ -13,7 +13,6 @@
             
                 <form method="post">
                     <input type="hidden" name="blogid" value="<%= blog.blogid %>">
-<!-- kullanıcı url den :blogid kısmı değiştirsede ve aciklama baslik gibi değer güncellerse url de yazdığğı değeri güncellemiş olur. ör/ tıkladığı blogid değeri 2 url de bu yüzden 2 yazar kullanıcı gidip url deki 2 yerine 4 yazarsa güncellemiş olduğu aciklama baslik değerleri 4 blogid değerine sahip blogu güncellemiş olur. O yüzden biz bunu engellemek için kullanıcı hangi blog a tıklarsa o blogun blogid değeri blogid namesi ile body sayesinde bize gelmiş olur biz de bu değeri çekersek ve req.params.blogid yerine req.body.blogid değerini alırsak ona göre veri güncelleme işlemi yaparsak açık bırakmadan bu işlemi tamamlamış oluruz.  -->
                     <div class="row mb-3"> 
                         <label for="baslik" class="col-sm-2 col-form-label">Başlık</label>
                         <div class="col-sm-8">

@@ -2,6 +2,41 @@ const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
 
+router.get("/blog/delete/:blogid", async(req, res) =>{
+
+    const blogid = req.params.blogid
+
+    try {
+        const [blogs, ] = await db.query("select * from blog where blogid=?", [blogid])
+        const blog = blogs[0];
+
+        res.render("admin/blog-delete",{
+            title:"blog sileme işlemleri",
+            blog:blog
+        })
+
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.post("/blog/delete/:blogid" , async (req,res) =>{
+    const blogid = req.body.blogid; //yine tıkladığımız blog html tarafında gizli bir input sayesinde blogid değerini alır ver 
+    
+    try {
+        await db.query("DELETE from blog where blogid=?" , [blogid]) //sadece DELETE from blog yazarsak tüm blogları silmiş olur. 
+//biz datandan gelen blogid değeri kime eşit olan değeri almak istiyoruz üsttden gelen blogid=req.body.blogid değerine eşit olan değeri almak istiyoruz
+        res.redirect("/admin/blogs")
+        
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+
+
 
 router.get( "/blog/create", async(req ,res) => {
 
@@ -58,22 +93,20 @@ router.get( "/blog/:blogid", async(req ,res) => {
     }
 }  )
 
-// BLOGLARIMIZI GÜNCELLİYELİM güncelleme işlemleri de POST ile olur onun içib bizim post router middleware sine ihtiyacımız var. 
 
 router.post( "/blog/:blogid", async(req ,res) => { 
-    const blogid = req.body.blogid; //biz neden burada params ile güncelleyeceğimiz id değerini almadık ? -> çünkü kullanıcı gidip url den :blogid değerini değiştirirse kullanıcın güncellemek istediği yazılar url de yazmış olduğu id değerindeki data verilerini güncellemiş olur.  O yüzden gelen requesten bu id değerini almak daha mantıklı. Zatan blogid category id ile eşleştiği zaman gidip o veriyi güncelleyecek.
-    const baslik = req.body.baslik; //req.body post tarafından gelen tüm form bilgilerini bize verir
-    const aciklama = req.body.aciklama; //req.body.aciklama formda name değeri aciklama olan inputun veya artık hangi form değeriyse onun değerini döndürür. 
+    const blogid = req.body.blogid;
+    const baslik = req.body.baslik; 
+    const aciklama = req.body.aciklama; 
     const resim = req.body.resim; 
-    const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; //check boxlar on of değeri döndürür biz on gelirse yap dedik yani birnevi true yap demiş olduk.
+    const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; 
     const onay = req.body.onay == "on" ? "1" : "0" ; 
-    const kategoriid = req.body.kategori; //id bilgisini getiricek
+    const kategoriid = req.body.kategori; 
     console.log(req.body)
 
     try {
-//aslında güncelleme kodunun okunuşu sen blogu baslik , aciklmama ... bilgilerini güncelle ve set le yani gönder demiş oluyoruz.
         await db.query("UPDATE blog SET baslik = ?, aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, aciklama, resim, anasayfa, onay, kategoriid, blogid]);
-//nedne where diyoruz çünkü biz bize serverden gelen where değeri  blogid = req.body.blogid den gelen değere eşit olan blogun gelmesini istiyoruz
+
         res.redirect("/admin/blogs")
     } catch (error) {
         console.log(error);
