@@ -9,8 +9,8 @@ app.use(express.urlencoded())// biz bunu yazdığımız zaman post işleminde ge
 
 app.set("view engine","ejs")
 
-app.use("/libs" ,express.static(path.join(__dirname,"node_modules")))
-app.use("/static",express.static(path.join(__dirname,"public")))    
+app.use("/libs" , express.static(path.join(__dirname,"node_modules")))
+app.use("/static", express.static(path.join(__dirname,"public")))    
 
     app.use("/admin",adminRoutes); 
     app.use(userRoutes); 

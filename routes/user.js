@@ -6,7 +6,7 @@ const db = require("../data/db")
 //en özel link en üstde bulur
 
 router.use("/blogs/category/:categoryid" , async (req , res) => {
-    const id = req.params.categoryid //burada yine gittiği id yi alıyoruz
+    const id = req.params.categoryid 
 
     try {
         const [blogs, ] = await db.query("select * from blog where categoryid=?" , [id]) //burada gelen id ye göre blogları çekiyoruz
@@ -16,7 +16,7 @@ router.use("/blogs/category/:categoryid" , async (req , res) => {
             title:"Tüm Kurslar",
             blogs:blogs, 
             categories:categories,
-            secilenCategory:id, //url den gelen id değerini gönderiyoruz
+            secilenCategory:id, 
         })
         
     } catch (error) {

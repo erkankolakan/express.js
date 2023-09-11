@@ -2,12 +2,11 @@ const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
 
-/* Fromdan aldığımız bilgilerle veri tabanında bir kayıt oluşturalım, Fromdan gelen dataları ilgili root a göndermemiz gerekir,   */
 
 router.get( "/blog/create", async(req ,res) => {
-// Bize get requesti aracılığıyla bu form geliyorsa biz sayfa categories leri göndericez tamam ama post requesti geldiği zaman formdaki bilgilerle insert sorgusu oluşturup bu bilgileri veri tabanına ekliyeceğiz 
+
     try {
-        const [categories, ] = await db.query("select * from category") //kategori tablosunda ki tüm verileri getir
+        const [categories, ] = await db.query("select * from category") 
 
         res.render("admin/blog-create" , {
             title: "Yeni Blog Ekle",
@@ -20,66 +19,59 @@ router.get( "/blog/create", async(req ,res) => {
 
 
 router.post("/blog/create" , async (req, res) => {
-    // body içerisinde bize gelen tüm veriker mevcuttur body üzerinden verile ulaşabiliyoruz.
     const baslik = req.body.baslik;
     const aciklama = req.body.aciklama;
     const resim = req.body.resim;
-    const kategori = req.body.kategori; //bu formun ismidir
+    const kategori = req.body.kategori; 
     const anasayfa = req.body.anasayfa == "on" ? 1:0 ; 
     const onay = req.body.onay == "on" ? 1:0 ;
 
-    //Bize on veya of gelecektir biz onlardan ziyade true veya false isiyoruz 1:0 yazabileceğimiz gibi onların yerien true ve false de yazabiliriz.
-    //şimdi aldığımız bu dataları veri tabanına aktaralım
-    //veri tabanına kayıt eklerken INSERT komutunu kullanıyoruz (küçük harfede yazabiliriz)
-
     try {
-        await db.query("INSERT INTO blog(baslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?)", [baslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] ) // Burada gelen dataların hangi colonlara yazdırılacak onun isimlerini yazıyoruz o yüzden isimler veri tabanında nasıl yazıyorsa aynı şekilde yazamız gerekiyor nede olsa ordaki isimlere göre colonlara kaydedicek
-        res.redirect("/");
+        await db.query("INSERT INTO blog(baslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?)", [baslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] ) // Burada gelen 
+        res.redirect("/admin/blogs");
 
     } catch (error) {
         console.log(error);
     }
-
-    console.log(req.body) //-> gelen req içindeki body bilgisi sayfadan gelen data bilgisini verir. örn/ baslik="node.js" , aciklama="abc" ama biz bu bilgilerin hangi formatda geldiğinide yönetiyor olmamız gerekir. bunun için ana sayfada app.use(express.urlencoded) dememiz gerekir
 })
 
 
-router.get( "/blog/:blogid", (req ,res) => {
-    res.render("admin/blog-edit")
-}  )
+router.get( "/blog/:blogid", async(req ,res) => { // admin/blog/:blogid blogların düzenleyeciğimiz sayfa
 
-router.get( "/blogs", (req ,res) => {
-    res.render("admin/blog-list")
-}  )
+    const blogid = req.params.blogid //üsteki isim neyse biz onun yazıyoruz, PARAMS sayesinde bize bu bilgi gelmiş oluyor
 
-module.exports = router
-
-/*
-
-router.use( "/blog/create", async(req ,res) => {
-
-    if (req.method("POST")) { sayfadan gelen bilgiye göre gelen POST requestiyse ona göre bir kayıt işlemi yapacağız Eğer gelen veri GET ise de kullanıcıya formu göstereceğiz
-        //KAYIT
-    }
-    else{
     try {
+        const [blogs,] = await db.query("select * from blog where blogid=?", [blogid]) //tüm blogları getir ama blogid değeri urlden gelen blogid değerine eşit olan blog bilgilerini getir diyoruz.
+        const [categories,] = await db.query("select * from category") //kategori bilgileri için sayfamıza kategori bilgilerini gönderiyoruz 
+        const blog = blogs[0] // column bilgileri işimize yaramadığı için yine onları elemnine ediyoruz
 
-        const [categories, ] = await db.query("select * from category") //kategori tablosunda ki tüm verileri getir
+        if (blog) {
+            return res.render("admin/blog-edit",{ //admin dosayası altından blog-edit sayfasına erişiyoruz
+                title: blog.baslik,
+                blog: blog,
+                categories: categories
+            })}
+        res.redirect("admin/blogs") //kullanıcı gidip urldeki :blogid yerine sik sik şeyler yazarsa kullanıcıyı admin/blogs sayfasına atacak
 
-        res.render("admin/blog-create" , {
+    } catch (error) {
+        console.log(error);
+    }
+}  )
+
+
+router.get( "/blogs", async(req ,res) => {
+
+    try {
+        const [blogs, ] = await db.query("select blogid, baslik, resim from blog ") 
+        res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
-            categories: categories,
+            blogs:blogs 
         })
     } catch (error) {
         console.log(error);
     }
+
 }  )
-    }
 
-AMA BU ŞEKİLDE YAZMAYA GEREK YOK.
-* eskide route.use yaptığımızda normal bir middleware oluşturmuş oluyorduk. Ama onun yerine artık biz 
-GET işlemleri için route.get -> get işlemi geldiği zaman direk o middleware devreye giricek
-POST işelemleri içidnde route.post -> sayfadan post isteği geldiği zamanda o fonksiyon çalışmış olur.
+module.exports = router
 
-
-*/

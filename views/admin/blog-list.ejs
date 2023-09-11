@@ -1,11 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+ <%- include('../partials/head') %>
 </head>
 <body>
-    admin blog list45121
+    
+    <%- include('../partials/nav') %> 
+        <div class="container mt-3 ">
+            <div class="col-md-12 mt-3" >
+                <table class="table table-bordered table-striped" >
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">id</th>
+                            <th style="width:150px;">resim</th>
+                            <th>baslik</th>
+                            <th style="width:130px;">id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% blogs.forEach(element => { %>
+                            <tr>
+                                <td># <%= element.blogid %></td>
+                                <td>
+                                    <img src="/static/images/<%= element.resim %>" class="img-fluid"  width="400" height="200"  alt="">
+                                    <!-- static/images sabit gelecek resim bilgiside datadan gelecek -->
+                                </td>
+                                <td>
+                                    <%= element.baslik %>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-primary" href="/admin/blog/<%= element.blogid %>">düzenle</a>
+                                    <a class="btn btn-sm btn-danger" href="/admin/blog/<%= element.blogid %>">sil</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+
 </body>
 </html>
+
+
