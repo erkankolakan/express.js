@@ -7,7 +7,30 @@
     
     <%- include('../partials/nav') %> 
         <div class="container mt-3 ">
+            
             <div class="col-md-12 mt-3" >
+                <!-- bize action=edit bilgisinden bir değer geliyorsa ve bu gelen değer edit ise bize üstden bid div blog güncellendi diye bir alert atacaktır. -->
+                <% if (action != "undefined" && action=="edit") { %> 
+                    <div class="alert alert-success">
+                     <%= blogid %> numaralı blog başarıyla güncellendi
+                    </div>
+                    
+                <% } %>
+
+                <% if (action != "undefined" && action=="create") { %> 
+                    <div class="alert alert-success">
+                        Blog başarıyla eklendi
+                    </div>
+                    
+                <% } %>
+
+                <% if (action != "undefined" && action=="delete") { %>
+                    <div class="alert alert-success">
+                        Blog başarıyla silindi
+                    </div>
+                <% } %>
+
+                
                 <table class="table table-bordered table-striped" >
                     <thead>
                         <tr>
