@@ -55,7 +55,7 @@ router.get("/categories/delete/:categoryid", async(req, res) =>{
 })
 
 router.post("/categories/delete/:categoryid" , async (req,res) =>{
-    const categoryid = req.body.categoryid;  
+    const categoryid = req.body.categoryid;  //bunu sadece post işlemlerinde yapabiliyoruz
     
     try {
         await db.query("DELETE from category where category_id=?" , [categoryid])
@@ -172,7 +172,7 @@ router.get( "/categories/:categoryid", async(req ,res) => {
     const categoryid = req.params.categoryid 
 
     try {
-        const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  
+        const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  //veri tabanında kategori id leri category_id şeklinde depoladığımız için bu şekilde yazdık
         const category = categories[0] 
 
         if (category) {
@@ -189,12 +189,12 @@ router.get( "/categories/:categoryid", async(req ,res) => {
 
 
 router.post( "/categories/:categoryid", async(req ,res) => { 
-    const categoryid = req.body.categoryid; 
+    const categoryid = req.body.categoryid; //burası yine html sayfasında tıkladığımız öğenin gizli bir inputla bize bilgisini getirir
     const name = req.body.name; 
 
 
     try {
-        await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); 
+        await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); //Bir sorgu koyarak hangisini güncelle biliyor musun category tablosundaki cattegory_id değeri üstte almış olduğumuz categoryid değerine sahip olan kategori bilgisini güncelle demiş olduk
         res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
 
     } catch (error) {
