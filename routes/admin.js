@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
+const imageUpload = require("../helpers/image-upload")
 
 
 
@@ -55,7 +56,7 @@ router.get("/categories/delete/:categoryid", async(req, res) =>{
 })
 
 router.post("/categories/delete/:categoryid" , async (req,res) =>{
-    const categoryid = req.body.categoryid;  //bunu sadece post işlemlerinde yapabiliyoruz
+    const categoryid = req.body.categoryid;  
     
     try {
         await db.query("DELETE from category where category_id=?" , [categoryid])
@@ -84,17 +85,14 @@ router.get( "/blog/create", async(req ,res) => {
 
 
 
-const multer = require("multer") //burada multer kütüphanesi çağırıyoruz
-const upload = multer({dest: "./public/images"}) //multer üzerinden de resimlerin nereye kaydolacağını yönetiyoruz.
-
-//resmi post işlemi ile alacağız ve bir tane alacağız o yüzden dolayı upload.single("resim") yazıyoruz. Burada resim yazmamızın sebebi html de resmi aldığımız input un name değeri resimdir. 
-router.post("/blog/create", upload.single("resim") , async (req, res) => {
+router.post("/blog/create", imageUpload.upload.single("resim") , async (req, res) => {
     const baslik = req.body.baslik;
     const aciklama = req.body.aciklama;
-    const resim = req.file.filename; //const resim = req.body.resim; burası böyleyken text tabanlı bir bilgi taşıyordu o yüzden değiştirmemiz lazım
+    const resim = req.file.filename; 
     const kategori = req.body.kategori; 
     const anasayfa = req.body.anasayfa == "on" ? 1:0 ; 
     const onay = req.body.onay == "on" ? 1:0 ;
+
 
     try {
         console.log(resim)
@@ -179,7 +177,7 @@ router.get( "/categories/:categoryid", async(req ,res) => {
     const categoryid = req.params.categoryid 
 
     try {
-        const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  //veri tabanında kategori id leri category_id şeklinde depoladığımız için bu şekilde yazdık
+        const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  
         const category = categories[0] 
 
         if (category) {
@@ -196,12 +194,12 @@ router.get( "/categories/:categoryid", async(req ,res) => {
 
 
 router.post( "/categories/:categoryid", async(req ,res) => { 
-    const categoryid = req.body.categoryid; //burası yine html sayfasında tıkladığımız öğenin gizli bir inputla bize bilgisini getirir
+    const categoryid = req.body.categoryid; 
     const name = req.body.name; 
 
 
     try {
-        await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); //Bir sorgu koyarak hangisini güncelle biliyor musun category tablosundaki cattegory_id değeri üstte almış olduğumuz categoryid değerine sahip olan kategori bilgisini güncelle demiş olduk
+        await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); 
         res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
 
     } catch (error) {
