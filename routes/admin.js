@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require("../data/db")
 const imageUpload = require("../helpers/image-upload")
 
+const fs = require("fs") //fs(file sistem) bir node.js modülüdür. 
+
 
 
 router.get("/blog/delete/:blogid", async(req, res) =>{
@@ -156,14 +158,12 @@ router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,re
     const aciklama = req.body.aciklama; 
     let resim = req.body.resim;
 
-    // bu kısım bizim html de gizlemiş olduğumuz hidden inputundan gelir. Bunun amacı kullanıcı bir resim seçtiyse req.file den seçtiği değeri resim değerine atamak eğer seçmediyse eski resim değerini kaydetmemiz gerekir.
-    // Burada let değeri vermemiz önemli, let değeri daha sonra değişkenleri değişterebilmemizi sağlar. 
-    //Bizim bu şekilde yapmamız her türlü resim değerinin daa ya göndermemizi sağlar. 
-    /*
-    Burada özetle let resim = req.body.resim; değeri eski resim değeri biz bunu yedekte tutuyoruz kullanıcı resim seçmezse bu değeri dataya gönderiyoruz. Eğer kullanıcı bir resim seçerse resim değerini req.file.filename den gelen değerler güncellliyoruz.
-    */
     if (req.file) {
         resim = req.file.filename;
+
+        fs.unlink("./public/images/" + req.body.resim, err => { //req.body.resim bilgisini biz komple kaldırmamıştık sadece hidden ile gizlemiştik.
+            console.log(err); //bir hata gelirse yazdırılıcak
+        })
     }
 
     const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; 
