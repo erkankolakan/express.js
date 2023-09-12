@@ -10,10 +10,6 @@
     <div class="container mt-3 ">
         <div class="row">
             <div class="col-md-12 mt-3">
-            
-<!-- form default olarak text değerlerini taşır. Biz server a biz resimde yüklemek istediğimiz için form un data özelliğini açmamız gerekir oda form a enctype="multipart/form-data" yazarak gerçekleştirilebilir.
-Bizim taşıdığımız dosyayı ele alacak olan MULTER kütüphanesidir. MULTER kütüphanesi express.js içersinde direk olarak yok. Bunu enpm paketi olarak indirmemiz gerekir.
--->
                 <form method="post" enctype="multipart/form-data"> 
                     <div class="row mb-3">
                         <label for="baslik" class="col-sm-2 col-form-label">Başlık</label>
@@ -23,9 +19,16 @@ Bizim taşıdığımız dosyayı ele alacak olan MULTER kütüphanesidir. MULTER
                     </div>
 
                     <div class="row mb-3">
+                        <label for="altbaslik" class="col-sm-2 col-form-label">Alt Başlık</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" name="altbaslik" rows="5"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <label for="aciklama" class="col-sm-2 col-form-label">Açıklama</label>
                         <div class="col-sm-8">
-                            <textarea class="form-control" name="aciklama" rows="10"></textarea>
+                            <textarea id="editor" class="form-control" name="aciklama" rows="10"></textarea>
                         </div>
                     </div>
 
@@ -42,7 +45,6 @@ Bizim taşıdığımız dosyayı ele alacak olan MULTER kütüphanesidir. MULTER
                         <div class="col-sm-8">
                             <select name="kategori" id="kategori" class="form-select">
                                 <option value="-1">Kategori Seçiniz</option>
-                    <!-- gelen değer -1 değilse admin mutlaka bir kategori seçmiştir -->
                                 <% categories.forEach(category => { %>
                                     <option value="<%= category.category_id %>"><%= category.name %></option>
                                 <% }) %>
@@ -50,8 +52,6 @@ Bizim taşıdığımız dosyayı ele alacak olan MULTER kütüphanesidir. MULTER
                             </select>
                         </div>
                     </div>
-                    <!-- serverden bu bilgilere onlara vermiş olduğumuz name bilgisi sayesinde ulaşıyoruz -->
-
                     
                         <div class="row mb-3">
                             <div class="col-sm-8 offset-sm-2">
@@ -87,6 +87,18 @@ Bizim taşıdığımız dosyayı ele alacak olan MULTER kütüphanesidir. MULTER
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+    <script>
+        // bu kısımları full CK editor sayfasından kopyalıyoruz. Ztn kendisi bizim için herşeyi yazmış.
+
+        ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+            });
+    </script>
 
 </body>
 </html>

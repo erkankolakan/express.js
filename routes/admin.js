@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
 const imageUpload = require("../helpers/image-upload")
-
 const fs = require("fs") //fs(file sistem) bir node.js modülüdür. 
 
 
@@ -89,6 +88,7 @@ router.get( "/blog/create", async(req ,res) => {
 
 router.post("/blog/create", imageUpload.upload.single("resim") , async (req, res) => {
     const baslik = req.body.baslik;
+    const altbaslik = req.body.altbaslik; // altbaslik divleri eklediğimiz için burada onuda eklememiz gerekir. Tabi aşağıdakilerde de günceleme yap
     const aciklama = req.body.aciklama;
     const resim = req.file.filename; 
     const kategori = req.body.kategori; 
@@ -98,7 +98,7 @@ router.post("/blog/create", imageUpload.upload.single("resim") , async (req, res
 
     try {
         console.log(resim)
-        await db.query("INSERT INTO blog(baslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?)", [baslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] ) 
+        await db.query("INSERT INTO blog(baslik,altbaslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?,?)", [baslik,altbaslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] ) 
         res.redirect("/admin/blogs?action=create"); 
 
     } catch (error) {
@@ -154,6 +154,7 @@ router.get( "/blog/:blogid",  async(req ,res) => {
 
 router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,res) => { 
     const blogid = req.body.blogid;
+    const altbaslik = req.body.altbaslik;
     const baslik = req.body.baslik; 
     const aciklama = req.body.aciklama; 
     let resim = req.body.resim;
@@ -161,8 +162,8 @@ router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,re
     if (req.file) {
         resim = req.file.filename;
 
-        fs.unlink("./public/images/" + req.body.resim, err => { //req.body.resim bilgisini biz komple kaldırmamıştık sadece hidden ile gizlemiştik.
-            console.log(err); //bir hata gelirse yazdırılıcak
+        fs.unlink("./public/images/" + req.body.resim, err => { 
+            console.log(err); 
         })
     }
 
@@ -172,7 +173,7 @@ router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,re
     console.log(req.body)
 
     try {
-        await db.query("UPDATE blog SET baslik = ?, aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, aciklama, resim, anasayfa, onay, kategoriid, blogid]);
+        await db.query("UPDATE blog SET baslik = ?,altbaslik = ? ,aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, altbaslik ,aciklama, resim, anasayfa, onay, kategoriid, blogid]);
 
         res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
     } catch (error) {
@@ -222,7 +223,7 @@ router.post( "/categories/:categoryid", async(req ,res) => {
 router.get( "/blogs", async(req ,res) => {
 
     try {
-        const [blogs, ] = await db.query("select blogid, baslik, resim from blog")
+        const [blogs, ] = await db.query("select blogid, baslik, altbaslik, resim from blog")
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,

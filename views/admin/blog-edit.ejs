@@ -23,9 +23,16 @@
                     </div>
 
                     <div class="row mb-3">
+                        <label for="altbaslik" class="col-sm-2 col-form-label">Alt Başlık</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" name="altbaslik" rows="5" value="<%= blog.altbaslik %>" ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <label for="aciklama" class="col-sm-2 col-form-label">Açıklama</label>
                         <div class="col-sm-8">
-                            <textarea class="form-control" name="aciklama" rows="10" > <%= blog.aciklama %> </textarea>
+                            <textarea id="editor" class="form-control" name="aciklama" rows="10" > <%= blog.aciklama %> </textarea>
                         </div>
                     </div>
 
@@ -88,6 +95,20 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"> </script>
+
+    <script>
+        // bu kısımları full CK editor sayfasından kopyalıyoruz. Ztn kendisi bizim için herşeyi yazmış.
+
+        ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+            });
+    </script>
+
 
 </body>
 </html>
