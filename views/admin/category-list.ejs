@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <%- include('../partials/head') %>
+</head>
+<body>
+    
+    <%- include('../partials/nav') %> 
+        <div class="container mt-3 ">
+            
+            <div class="col-md-12 mt-3" >
+                <!-- bize action=edit bilgisinden bir değer geliyorsa ve bu gelen değer edit ise bize üstden bid div blog güncellendi diye bir alert atacaktır. -->
+                <% if (action != "undefined" && action=="edit") { %> 
+                    <div class="alert alert-success">
+                     <%= categoryid %> numaralı kategori başarıyla güncellendi
+                    </div>
+                    
+                <% } %>
+
+                <% if (action != "undefined" && action=="create") { %> 
+                    <div class="alert alert-success">
+                        Kategori başarıyla eklendi
+                    </div>
+                    
+                <% } %>
+
+                <% if (action != "undefined" && action=="delete") { %>
+                    <div class="alert alert-success">
+                        Kategori başarıyla silindi
+                    </div>
+                <% } %>
+
+                
+                <table class="table table-bordered table-striped" >
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">id</th>
+                            <th>name</th>
+                            <th style="width:130px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% categories.forEach(element => { %>
+                            <tr>
+                                <td># <%= element.category_id %></td>
+
+                                <td>
+                                    <%= element.name %>
+                                </td>
+                                <td >
+                                    <a class="btn btn-sm btn-primary" href="/admin/categories/<%= element.category_id %>">düzenle</a>
+                                    <a class="btn btn-sm btn-danger" href="/admin/categories/delete/<%= element.category_id %>">sil</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+
+</body>
+</html>
+
+

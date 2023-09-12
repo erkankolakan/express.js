@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
 
-// QueryString -> Bir blog değerini güncellediğimiz zaman kullanıcıyı direk blogs sayfasına atıyoruz karşımıza liste geliyor ama biz kullanıcıya ürün başarılı bir şekilde güncellendi veya blog başarılı bir şekilde silindi demek isitorsak biz bunlar QueryString ile yapıyoruz. QueryString, bir URL (Uniform Resource Locator) içindeki veri ve parametreleri temsil eden bir dizedir. Genellikle bir web sayfasına veya uygulamasına veri göndermek veya belirli bir sayfada görüntülenen içeriği filtrelemek için kullanılır. QueryString, anahtar-değer çiftlerinden oluşur, bu çiftler "=" işareti ile ayrılır ve "&" işareti ile birbirinden ayrılır.
+
 
 router.get("/blog/delete/:blogid", async(req, res) =>{
 
@@ -27,7 +27,7 @@ router.post("/blog/delete/:blogid" , async (req,res) =>{
     
     try {
         await db.query("DELETE from blog where blogid=?" , [blogid])
-        res.redirect("/admin/blogs?action=delete") //Bir görevi nerede bitiyoruz diye bakıyoruz. Burada bir ürünü siliyoruz yaptığımız işlem ne görev=delete silme işlemi yaptık. 
+        res.redirect("/admin/blogs?action=delete") 
         
     } catch (error) {
         console.log(error);
@@ -35,6 +35,37 @@ router.post("/blog/delete/:blogid" , async (req,res) =>{
 
 })
 
+
+router.get("/categories/delete/:categoryid", async(req, res) =>{
+
+    const categoryid = req.params.categoryid
+
+    try {
+        const [categories, ] = await db.query("select * from category where category_id=?", [categoryid])
+        const category = categories[0];
+
+        res.render("admin/category-delete",{
+            title:"category sileme işlemleri",
+            category:category,
+        })
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.post("/categories/delete/:categoryid" , async (req,res) =>{
+    const categoryid = req.body.categoryid;  
+    
+    try {
+        await db.query("DELETE from category where category_id=?" , [categoryid])
+        res.redirect("/admin/categories?action=delete") 
+        
+    } catch (error) {
+        console.log(error);
+    }
+
+})
 
 
 router.get( "/blog/create", async(req ,res) => {
@@ -61,14 +92,35 @@ router.post("/blog/create" , async (req, res) => {
 
     try {
         await db.query("INSERT INTO blog(baslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?)", [baslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] ) 
-        res.redirect("/admin/blogs?action=create"); //ne yaptık blog oluşturduk ? oldukça büyük bir etkendir
+        res.redirect("/admin/blogs?action=create"); 
 
     } catch (error) {
         console.log(error);
     }
 })
 
+router.get( "/category/create", async(req ,res) => {
 
+    try {
+        res.render("admin/category-create" , {
+            title: "Yeni Katagori Ekle",
+
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.post("/category/create" , async (req, res) => {
+    const name = req.body.name;
+    try {
+        await db.query("INSERT INTO category(name) VALUES(?)", [name]) 
+        res.redirect("/admin/categories?action=create"); 
+
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 router.get( "/blog/:blogid", async(req ,res) => { 
 
@@ -106,7 +158,45 @@ router.post( "/blog/:blogid", async(req ,res) => {
     try {
         await db.query("UPDATE blog SET baslik = ?, aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, aciklama, resim, anasayfa, onay, kategoriid, blogid]);
 
-        res.redirect("/admin/blogs?action=edit&blogid=" + blogid) //ne yaptık bir öğe editledik
+        res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
+    } catch (error) {
+        console.log(error);
+    }
+
+}  )
+
+//categories
+
+router.get( "/categories/:categoryid", async(req ,res) => { 
+
+    const categoryid = req.params.categoryid 
+
+    try {
+        const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  
+        const category = categories[0] 
+
+        if (category) {
+            return res.render("admin/category-edit",{ 
+                title: category.name,
+                category: category
+            })}
+        res.redirect("admin/categories") 
+
+    } catch (error) {
+        console.log(error);
+    }
+}  )
+
+
+router.post( "/categories/:categoryid", async(req ,res) => { 
+    const categoryid = req.body.categoryid; 
+    const name = req.body.name; 
+
+
+    try {
+        await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); 
+        res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
+
     } catch (error) {
         console.log(error);
     }
@@ -116,11 +206,11 @@ router.post( "/blog/:blogid", async(req ,res) => {
 router.get( "/blogs", async(req ,res) => {
 
     try {
-        const [blogs, ] = await db.query("select blogid, baslik, resim from blog ") 
+        const [blogs, ] = await db.query("select blogid, baslik, resim from blog")
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,
-            action: req.query.action, //bize url den geleen queryString key değeri xxx ise biz req.query.xxx yazark url den gelen bilgiyi çekebiliriz.
+            action: req.query.action,
             blogid:req.query.blogid
         })
     } catch (error) {
@@ -128,8 +218,41 @@ router.get( "/blogs", async(req ,res) => {
     }
 })
 
+router.get( "/categories", async(req ,res) => {
 
-//Bu sayfada post requestleri sonucunda en nihayetinde admin/blogsu çalıştırıyoruz dolayısıyla admin/blogs çalıştığı zaman gele requestde url bize bu /admin/blogs?action=edit bilgiyi getiricek bizde admin/blogs sayfasında bunu karşılayarak html sayfama göndereceğim. 
+    try {
+        const [categories, ] = await db.query("select * from category")
+        res.render("admin/category-list", {
+            title: "Yeni Blog Ekle",
+            categories:categories ,
+            action: req.query.action,
+            categoryid: req.query.categoryid 
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router
 
