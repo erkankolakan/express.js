@@ -11,7 +11,10 @@
         <div class="row">
             <div class="col-md-12 mt-3">
             
-                <form method="post">
+<!-- form default olarak text değerlerini taşır. Biz server a biz resimde yüklemek istediğimiz için form un data özelliğini açmamız gerekir oda form a enctype="multipart/form-data" yazarak gerçekleştirilebilir.
+Bizim taşıdığımız dosyayı ele alacak olan MULTER kütüphanesidir. MULTER kütüphanesi express.js içersinde direk olarak yok. Bunu enpm paketi olarak indirmemiz gerekir.
+-->
+                <form method="post" enctype="multipart/form-data"> 
                     <div class="row mb-3">
                         <label for="baslik" class="col-sm-2 col-form-label">Başlık</label>
                         <div class="col-sm-8">
@@ -29,7 +32,7 @@
                     <div class="row mb-3">
                         <label for="resim" class="col-sm-2 col-form-label">Resim</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="resim" name="resim">
+                            <input type="file" class="form-control" id="resim" name="resim">
                         </div>
                     </div>
 
