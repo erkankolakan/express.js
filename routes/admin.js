@@ -127,7 +127,7 @@ router.post("/category/create" , async (req, res) => {
     }
 })
 
-router.get( "/blog/:blogid", async(req ,res) => { 
+router.get( "/blog/:blogid",  async(req ,res) => { 
 
     const blogid = req.params.blogid 
 
@@ -150,11 +150,22 @@ router.get( "/blog/:blogid", async(req ,res) => {
 }  )
 
 
-router.post( "/blog/:blogid", async(req ,res) => { 
+router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,res) => { 
     const blogid = req.body.blogid;
     const baslik = req.body.baslik; 
     const aciklama = req.body.aciklama; 
-    const resim = req.body.resim; 
+    let resim = req.body.resim;
+
+    // bu kısım bizim html de gizlemiş olduğumuz hidden inputundan gelir. Bunun amacı kullanıcı bir resim seçtiyse req.file den seçtiği değeri resim değerine atamak eğer seçmediyse eski resim değerini kaydetmemiz gerekir.
+    // Burada let değeri vermemiz önemli, let değeri daha sonra değişkenleri değişterebilmemizi sağlar. 
+    //Bizim bu şekilde yapmamız her türlü resim değerinin daa ya göndermemizi sağlar. 
+    /*
+    Burada özetle let resim = req.body.resim; değeri eski resim değeri biz bunu yedekte tutuyoruz kullanıcı resim seçmezse bu değeri dataya gönderiyoruz. Eğer kullanıcı bir resim seçerse resim değerini req.file.filename den gelen değerler güncellliyoruz.
+    */
+    if (req.file) {
+        resim = req.file.filename;
+    }
+
     const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; 
     const onay = req.body.onay == "on" ? "1" : "0" ; 
     const kategoriid = req.body.kategori; 
