@@ -33,26 +33,42 @@ const Blog = sequelize.define("blog" , {
         allowNull:false
     }
 
-    //burda ki date bilgisini sildik zaten database bize otomatik bir şekilde ekliyor
-    
+
 })
 
- const  sync = async() => { //Üste oluşturmuş olduğumuz tabloyu veri tabanına gönderiyoruz.
-    await Blog.sync({force: true})
+ const  sync = async() => { 
+    await Blog.sync({alter : true})
     console.log ("Blog tablosu eklendi")
- }
 
+
+        const count = await Blog.count;
+
+        if (count == 0) {
+            await Blog.bulkCreate([
+                {
+                    baslik:"Komple Uygulamalı Web Geliştirme Eğitimi",
+                    altbaslik:"Sıfırdan ileri seviyeye 'Web Geliştirme': Html, Css, Sass, Flexbox, Bootstrap, Javascript, Angular, JQuery, Asp.Net Mvc&Core Mvc",
+                    aciklama:"Web geliştirme komple bir web sitesinin hem web tasarım (html,css,javascript), hem de web programlama (asp.net mvc) konularının   kullanılarak geliştirilmesidir. Sadece html css kullanarak statik bir site tasarlayabiliriz ancak işin içine bir web programlama dilini de katarsak   dinamik bir web uygulaması geliştirmiş oluruz.",
+                    resim:"1.jpg",
+                    anasayfa:true,
+                    onay:true,
+                    categoryid:1
+                },
+                {
+                    baslik:"Node.js ile Sıfırdan İleri Seviye Web Geliştirme",
+                    altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                    aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                    resim:"2.jpg",
+                    anasayfa:true,
+                    onay:true,
+                    categoryid:1
+                },
+        
+            ]
+        )
+        }
+       }
  sync()
 
  module.exports = Blog;
 
-/*
-    user.sync dediğimiz zaman direk modele göre bir SQL scripti uygulama tarafında oluşturulur ve bu SQL e gönderilir. SQL database sağlayıcısna gönderilir ve ona göre SQL sorgusu aracılığıya bir tablo oluşturulur. Yani burda sequlize nin yaptığı, uygulama tarafında bir SQL sorgusunu createTable şeklinde eklemiş olduğumuz özelliklere göre tek tek oluşturmasıdır.   
-
-    ** Usersync() - eğer öyle bir database tablosu yoksa oluşturulur, varsa data baseyi silmez 
-    ** User.sync({ force: true }) - Eğer aynı isimli bir tablo veri tabanında varsa o tabloyu ilk başta siler ve tekrar oluşturulur. Sildiği içinde data tablosu içindeki tüm verileri kaybetmiş oluruz . Buda bize boş bir tablo döndürür. 
-    ** User.sync({alter: true}) - Data  base tarafından tablo silmez iki tablo arasında ki değişiklikleri kontrol eder ve değişiklikleri veri tabanı tarafında güncelleme sorgusu olarak gönderir. 
-    
-    Biz bir uygulma yayınladığımız zaman yanlış birşeyler olursa verilerin hepsini kaybederiz, bu yöntemi biraz daha profosyönel bir şekilde ele almamız gerekir. 
-    Profosyonel kullanımda Migrations ile olakcatır.  
-*/

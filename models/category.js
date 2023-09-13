@@ -13,15 +13,49 @@ const Category = sequelize.define("category" , {
         allowNull:false, 
     },
 },{
-    timestamps:false // extra eklemiş olduğu times bilgisini kolondan silmek için kullanılır. Defalut olarak eklenen veri bilgilerini zamanını kendisi ekler o yüzden blogsta yazmış olduğumuz date özelliğini de eklememize gerek yok.
+    timestamps:false 
 })
 
+
 const  sync = async() => {  
-    await Category.sync({force: true})
+    await Category.sync({alter : true})
     console.log ("Category tablosu eklendi")  
+
+    const count = await Category.count()
+
+    if (count == 0) {
+
+        await Category.bulkCreate([ //bu şekilde toplu oluşsturma işlemleri de yapabiliriz
+        {name:"Web Geliştirme"},
+        {name:"Mobil Uygulama Geliştirme"},
+        {name:"Programlama"},
+    ])
+
+    }
  }
- //force = true dediğimizden dolayı, blog ve category bilgisini her çağırdığımızda veri tabanı bilgisin silinip tekrardan oluşmasına neden olacaktır. O yüzden burayı silebilir veya uygulamayı oluşturduğumuz aşamada test verileri de eklenebilir ancak blog üzerinden nasıl bir veri ekldiğini  bilelim ki biz rastgele 5 tane blog bilgisini eklemiş olsam her seferinde siler ve insert sorguşarını çalıştırabiliriz. Biz bu tablleleri tekrardan kullandığımız zaman test amaçlı eklemiş olduğumuz 5 tane tablenin silinip silinmemesi bizim için önemli olmaz. Ama bu sadece uygulmayı geliştirme aşamasında kullanılması gerekir, projenin yanınlanması söz konusu olduğunda bu gibi yöntemler kullanmıyor olmamız gerekir. Bunun yerine migrations kullanmamız gerekir. 
+
  sync()
 
  module.exports = Category;
 
+/*
+const c1 = Category.build({  -------// şuan uygulama tarafında oluşturduk xxx.save() dediğimiz zaman veri tabanına kaydeder. .save() demezsen burada kalır. 
+    name:"Web Geliştirme" -------- // id eklememize gerek yok ztn üstde autoIncrement:true diyerek otomatik bir şekilde üretilmesini sağlarız. 
+})
+
+await c1.save();    ----------  //burası gerçekten çalışsın ondan sonra aşağı satıra insin diye await ekliyoruz.
+console.log("c1 veri tabanına yazdırıldı")   ------------- // xxx.save() dediğimiz zaman veri tabanına kayedetmiş oluyoruz.
+*/
+
+/*
+    await Category.create({name:"Web Geliştirme"})
+    await Category.create({name:"Mobil Uygulama Geliştirme"})
+    await Category.create({name:"Programlama"})
+//create build den daha iyi çünkü nesneyi oluturup bir daha gidip extradan x.save() demeye gerek yok.
+//Hatta const c1 = Category diyip bir değişken üzrinde veriyi tutmak zorunda da değiliz. 
+
+bu şekilde tek tek yapmak yerine toplu oluşturma işlemi de yapabiliriz
+
+ Category.bulkCreate([ ])
+
+*/
