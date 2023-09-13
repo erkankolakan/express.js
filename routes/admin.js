@@ -140,16 +140,24 @@ router.get( "/blog/:blogid",  async(req ,res) => {
     const blogid = req.params.blogid 
 
     try {
-        const [blogs,] = await db.query("select * from blog where blogid=?", [blogid]) 
-        const [categories,] = await db.query("select * from category") 
-        const blog = blogs[0] 
+
+        const blog = await Blog.findByPk(blogid)
+
+        const categories = await Category.findAll()
 
         if (blog) {
-            return res.render("admin/blog-edit",{ 
-                title: blog.baslik,
-                blog: blog,
-                categories: categories
-            })}
+             res.render("admin/blog-edit",{ 
+                title: blog.dataValues.baslik,
+                blog: blog.dataValues,
+                categories: categories,
+                
+                
+            }
+            
+            )
+        }
+
+
         res.redirect("admin/blogs") 
 
     } catch (error) {
@@ -192,13 +200,16 @@ router.get( "/categories/:categoryid", async(req ,res) => {
     const categoryid = req.params.categoryid 
 
     try {
-        const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  
-        const category = categories[0] 
+
+
+
+        const category = await Category.findByPk(categoryid)
+//findByPk kullanarak direk pk e göre çekebiliriz. Kolon bilgisini eler ama yine dataValues üzerinden bilgiyi çekmen gerek
 
         if (category) {
             return res.render("admin/category-edit",{ 
-                title: category.name,
-                category: category
+                title: category.dataValues.name,
+                category: category.dataValues
             })}
         res.redirect("admin/categories") 
 
@@ -215,6 +226,10 @@ router.post( "/categories/:categoryid", async(req ,res) => {
 
     try {
         await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); 
+
+
+
+
         res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
 
     } catch (error) {
@@ -262,23 +277,54 @@ router.get( "/categories", async(req ,res) => {
 module.exports = router
 
 /*
+
+findAll() -> bize bir liste döndürür bu liste içerisinde işimize yaramayacak olan tablo bilgileri de gelir bunun içinden sıyrılmak için yine [categoryies, ] fln yapabilir ama sequelize bize daha iyi şeyler sunar.
+
+findByPk() -> primary keyine göre istediğimiz veriyi çekebilir ve bu çektiğimiz veri geriye bir obje döndürür. findNyPk(2) dersek id değeri 2 olan değeri getirir Buda bize direk dataValues ile direk istediğimiz veriye ulaşmamızı sağlar.
+
+findOne() -> değerine göre istediğimiz veriyi çekebilir ve bu çektiğimiz veri geriye bir obje döndürür.
+
+
+
+/*
+
 ÖNCESİ
-    const [categories, ] = await db.query("select * from category")
+// const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  
 
 SONRASI
-    const categories = await Category.findAll()
-
-    ama bizim burada kolon bilgisinden fln sıyrılmamız için aldığımız değer üzerinden dataValues değeri üzerinden istediğimiz değerlere ulaşmamız lazım. örneğin name , blogid gibi değerlere. 
-
-
-
-ÖNCESİ 
-        db.query("select blogid, baslik, altbaslik, resim from blog")
-
-
-SONRASI
-        const blogs = await Blog.findAll({
-        attributes:["blogid", "baslik", "altbaslik", "resim"]
+    const category = await Category.findAll({ //tüm verileri çekerken sorgu yapar
+        where:{
+            category_id:categoryid
+        //burada kriterleri belirliyorsunuz
+        //Category tablosundaki categoryid değerinin yukarıdan gelen categoryid değerine eşit olması gerektiğini söylüyoruz.
+        }
     })
 
+veya
+
+    const category = await Category.findOne({ //sadece birtane veri çekmeye yöneliktir
+        where:{
+            category_id:categoryid
+        //burada kriterleri belirliyorsunuz
+        //Category tablosundaki categoryid değerinin yukarıdan gelen categoryid değerine eşit olması gerektiğini söylüyoruz.
+        }
+    })
+
+veya
+
+    const categoryid = req.params.categoryid  -> //pk ya göre veri çeker ------- categoryid = primary key dir 
+
+    const category = await Category.findByPk(categoryid)
+
+ÖNCESİ
+        const [blogs,] = await db.query("select * from blog where blogid=?", [blogid]) 
+
+
+SONRASI
+        const blogs = Blog.findByPk(blogid)
+
+
 */
+
+
+

@@ -25,7 +25,7 @@
                     <div class="row mb-3">
                         <label for="altbaslik" class="col-sm-2 col-form-label">Alt Başlık</label>
                         <div class="col-sm-8">
-                            <textarea class="form-control" name="altbaslik" rows="5" value="<%= blog.altbaslik %>" ></textarea>
+                            <textarea class="form-control" name="altbaslik" rows="5"><%= blog.altbaslik %></textarea>
                         </div>
                     </div>
 
@@ -51,7 +51,7 @@
             <select name="kategori" id="kategori" class="form-select">
                 <option value="-1">Kategori Seçiniz</option>
                     <% categories.forEach(category => { %>
-                        <option value="<%= category.category_id %>" selected ><%= category.name %></option>
+                        <option value="<%= category.dataValues.category_id %>" selected ><%= category.dataValues.name %></option>
                     <% }) %>
             </select>
 
