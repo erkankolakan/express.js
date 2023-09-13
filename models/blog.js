@@ -33,7 +33,6 @@ const Blog = sequelize.define("blog" , {
         allowNull:false
     }
 
-
 })
 
  const  sync = async() => { 

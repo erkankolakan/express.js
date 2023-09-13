@@ -74,11 +74,11 @@ router.post("/categories/delete/:categoryid" , async (req,res) =>{
 router.get( "/blog/create", async(req ,res) => {
 
     try {
-        // const [categories, ] = await db.query("select * from category") 
+        const categories = await Category.findAll()
 
         res.render("admin/blog-create" , {
             title: "Yeni Blog Ekle",
-            // categories: categories,
+            categories: categories,
         })
     } catch (error) {
         console.log(error);
@@ -226,7 +226,10 @@ router.post( "/categories/:categoryid", async(req ,res) => {
 router.get( "/blogs", async(req ,res) => {
 
     try {
-        const [blogs, ] = await db.query("select blogid, baslik, altbaslik, resim from blog")
+        const blogs = await Blog.findAll({
+            attributes:["blogid", "baslik", "altbaslik", "resim"]
+        }) //Blog tablesinden blogid baslik altbaslik, resim bilgileri gelsin. 
+
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,
@@ -241,7 +244,8 @@ router.get( "/blogs", async(req ,res) => {
 router.get( "/categories", async(req ,res) => {
 
     try {
-        const [categories, ] = await db.query("select * from category")
+        const categories = await Category.findAll()
+
         res.render("admin/category-list", {
             title: "Yeni Blog Ekle",
             categories:categories ,
@@ -259,27 +263,22 @@ module.exports = router
 
 /*
 ÖNCESİ
- db.query("INSERT INTO blog(baslik,altbaslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?,?)", [baslik,altbaslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] )
+    const [categories, ] = await db.query("select * from category")
+
+SONRASI
+    const categories = await Category.findAll()
+
+    ama bizim burada kolon bilgisinden fln sıyrılmamız için aldığımız değer üzerinden dataValues değeri üzerinden istediğimiz değerlere ulaşmamız lazım. örneğin name , blogid gibi değerlere. 
+
+
+
+ÖNCESİ 
+        db.query("select blogid, baslik, altbaslik, resim from blog")
 
 
 SONRASI
- Blog.create({
-            baslik:baslik,
-            altbaslik:altbaslik,
-            aciklama:aciklama,
-            resim:resim,
-            anasayfa:anasayfa,
-            onay:onay,
-            categoryid:kategori
-        })
+        const blogs = await Blog.findAll({
+        attributes:["blogid", "baslik", "altbaslik", "resim"]
+    })
 
-ÖNCESİ
- db.query("INSERT INTO category(name) VALUES(?)", [name]) 
-
-
- SONRASI 
- Category.create({name: name}) 
-
-
- eskiden bu şekilde uzun SQL sorguları yazıyorduk ama artık sequelize kullandığımız için bu şekilde yapmamıza gerek yok.
 */

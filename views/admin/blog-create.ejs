@@ -44,8 +44,10 @@
                         <label for="kategori" class="col-sm-2 col-form-label">Kategori</label>
                         <div class="col-sm-8">
                             <select name="kategori" id="kategori" class="form-select">
-                                <option value="1">Web Geliştirme</option>
-
+                                <option value="-1">Kategori Seçiniz</option>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.dataValues.category_id %>"><%= category.dataValues.name %></option>
+                                <% }) %>
 
                             </select>
                         </div>
