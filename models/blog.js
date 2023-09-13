@@ -28,6 +28,10 @@ const Blog = sequelize.define("blog" , {
         type:DataTypes.BOOLEAN,
         allowNull:false
     },
+    onay:{
+        type:DataTypes.BOOLEAN,
+        allowNull:false
+    },
     categoryid:{
         type:DataTypes.INTEGER,
         allowNull:false
