@@ -1,8 +1,8 @@
 const {DataTypes} = require("sequelize");
-const sequelize = require("../data/db") //Sequelize ile veri tabanına bağlandığımız kısmı burada çağırıyoruz. Db den yani bu çağırıdığımızdan bize sequelize gelir. 
+const sequelize = require("../data/db")  
 
-const Blog = sequelize.define("blog" , { //2. parametrede kolon detaylarını veriyoruz
-    blogid:{ //burada id nin alacağı özellikleri yazıyoruz. Örenğin allowNull boş geçilemez olsun.
+const Blog = sequelize.define("blog" , { 
+    blogid:{ 
         type: DataTypes.INTEGER,
         autoIncrement:true,
         allowNull:false,
@@ -10,18 +10,18 @@ const Blog = sequelize.define("blog" , { //2. parametrede kolon detaylarını ve
     },
     baslik:{
         type: DataTypes.STRING,
-        allowNull:false, //baslik değeri boş geçilemez olsun.
+        allowNull:false, 
     },
     altbaslik:{
-        types:DataTypes.STRING,
+        type:DataTypes.STRING,
         allowNull:false
     },
     aciklama:{
-        types:DataTypes.TEXT,
-        allowNull:true //aciklama bilgisi boş geçilebilir.
+        type:DataTypes.TEXT,
+        allowNull:true 
     },
     resim:{
-        type:DataTypes.STRING,// Resim bilgisi ne olarak gelicek string mi text mi sayı mı boolean mi ???
+        type:DataTypes.STRING,
         allowNull:false
     },
     anasayfa:{
@@ -31,15 +31,28 @@ const Blog = sequelize.define("blog" , { //2. parametrede kolon detaylarını ve
     categoryid:{
         type:DataTypes.INTEGER,
         allowNull:false
-    },
-    eklemeTarihi:{
-        type:DataTypes.DATETIME,
-        dafeultValue: DataTypes.NOW //o an bir değer göndermek zorunda değiliz bu yazdığımız değer o anki tarih ve saati not alır.
-    },
+    }
+
+    //burda ki date bilgisini sildik zaten database bize otomatik bir şekilde ekliyor
     
 })
-module.exports = Blog; //blog bigisini dışarda kullanacağımız için gelip bu şekilde export ediyoruz. 
+
+ const  sync = async() => { //Üste oluşturmuş olduğumuz tabloyu veri tabanına gönderiyoruz.
+    await Blog.sync({force: true})
+    console.log ("Blog tablosu eklendi")
+ }
+
+ sync()
+
+ module.exports = Blog;
 
 /*
- type: DataTypes.INTEGER yazmamızın sebebi Sequelize, veritabanında her bir sütunun veri türünü bilmelidir. Bu, sütunun hangi türdeki verileri saklayacağını ve nasıl işleyeceğini belirlemesine yardımcı olur. type özelliği, bu veri türünü belirlemenize yardımcı olur. Örneğin, DataTypes.INTEGER veri türü, sütunun tam sayı değerlerini tutacağını belirtir. Bu sayede Sequelize, bu sütunu tam sayı değerlerini bekleyen bir sütun olarak oluşturur.
+    user.sync dediğimiz zaman direk modele göre bir SQL scripti uygulama tarafında oluşturulur ve bu SQL e gönderilir. SQL database sağlayıcısna gönderilir ve ona göre SQL sorgusu aracılığıya bir tablo oluşturulur. Yani burda sequlize nin yaptığı, uygulama tarafında bir SQL sorgusunu createTable şeklinde eklemiş olduğumuz özelliklere göre tek tek oluşturmasıdır.   
+
+    ** Usersync() - eğer öyle bir database tablosu yoksa oluşturulur, varsa data baseyi silmez 
+    ** User.sync({ force: true }) - Eğer aynı isimli bir tablo veri tabanında varsa o tabloyu ilk başta siler ve tekrar oluşturulur. Sildiği içinde data tablosu içindeki tüm verileri kaybetmiş oluruz . Buda bize boş bir tablo döndürür. 
+    ** User.sync({alter: true}) - Data  base tarafından tablo silmez iki tablo arasında ki değişiklikleri kontrol eder ve değişiklikleri veri tabanı tarafında güncelleme sorgusu olarak gönderir. 
+    
+    Biz bir uygulma yayınladığımız zaman yanlış birşeyler olursa verilerin hepsini kaybederiz, bu yöntemi biraz daha profosyönel bir şekilde ele almamız gerekir. 
+    Profosyonel kullanımda Migrations ile olakcatır.  
 */
