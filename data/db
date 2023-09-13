@@ -1,21 +1,42 @@
 //bu sayfa sayesinde her sayfada veri tabanımızı kolayca çağırabilir ve bilgileri çekebiliriz.
 const mysql = require("mysql2") 
 const config = require("../config")
+const { Sequelize } = require('sequelize');
 
-const connection = mysql.createConnection(config.db)
+
+// Option 3: Passing parameters separately (other dialects)
+const sequelize = new Sequelize(config.db.database , config.db.user , config.db.password, {
+        dialect:"mysql",
+        host: config.db.host,
+    });
 
 
-connection.connect((err) => { 
-    if (err) {
-    return console.log(err);
+    const baglantitesti = async() => {
+        try {
+            await sequelize.authenticate()
+            console.log("mysql bağlantısı yapılıdı")
+            
+        } catch (err ) {
+            console.log(err);
+        }
     }
-    console.log("Bağlantı başarılı");
-})
 
-module.exports = connection.promise()
+    baglantitesti()
 
-/*
+module.export = sequelize /*Bize bir promise gelicek ve bu sequlaze üzerinden açılan bağlantı üzerinden biz istediğimiz sorguyu göndere bileceğiz*/
 
-    connection objesini dışarı gönderiyoruz ama biz bu objeyi geriye promis olarak göndermek istiyorum. Promis olarak gönderip then ve cath bloglarıyla bu obje üzerinden bir sorguyu veri tabanına gönderebilirim.
+//bağlantı bilgilerini başka sayfalarda kullanabilmek için başka sayfada kullanıyoruz.   
 
-*/
+//eski bağlantı biz artık squlaze kullanıyoruz
+
+// const connection = mysql.createConnection(config.db)
+// connection.connect((err) => { 
+//     if (err) {
+//     return console.log(err);
+//     }
+//     console.log("Bağlantı başarılı");
+// })
+// module.exports = connection.promise()
+// /*
+//     connection objesini dışarı gönderiyoruz ama biz bu objeyi geriye promis olarak göndermek istiyorum. Promis olarak gönderip then ve cath bloglarıyla bu obje üzerinden bir sorguyu veri tabanına gönderebilirim.
+// */
