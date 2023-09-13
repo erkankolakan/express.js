@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../data/db")
 const imageUpload = require("../helpers/image-upload")
-const fs = require("fs") //fs(file sistem) bir node.js modülüdür. 
+const fs = require("fs") 
+
+const Blog = require("../models/blog") 
+const Category = require("../models/category")//oluşturmuş olduğumuz databaseleri buraya çağırıyoruz.
 
 
 
@@ -37,7 +40,6 @@ router.post("/blog/delete/:blogid" , async (req,res) =>{
 
 })
 
-
 router.get("/categories/delete/:categoryid", async(req, res) =>{
 
     const categoryid = req.params.categoryid
@@ -69,36 +71,40 @@ router.post("/categories/delete/:categoryid" , async (req,res) =>{
 
 })
 
-
 router.get( "/blog/create", async(req ,res) => {
 
     try {
-        const [categories, ] = await db.query("select * from category") 
+        // const [categories, ] = await db.query("select * from category") 
 
         res.render("admin/blog-create" , {
             title: "Yeni Blog Ekle",
-            categories: categories,
+            // categories: categories,
         })
     } catch (error) {
         console.log(error);
     }
 })
 
-
-
 router.post("/blog/create", imageUpload.upload.single("resim") , async (req, res) => {
     const baslik = req.body.baslik;
-    const altbaslik = req.body.altbaslik; // altbaslik divleri eklediğimiz için burada onuda eklememiz gerekir. Tabi aşağıdakilerde de günceleme yap
+    const altbaslik = req.body.altbaslik;
     const aciklama = req.body.aciklama;
     const resim = req.file.filename; 
     const kategori = req.body.kategori; 
     const anasayfa = req.body.anasayfa == "on" ? 1:0 ; 
     const onay = req.body.onay == "on" ? 1:0 ;
 
-
     try {
         console.log(resim)
-        await db.query("INSERT INTO blog(baslik,altbaslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?,?)", [baslik,altbaslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] ) 
+        await Blog.create({
+            baslik:baslik,
+            altbaslik:altbaslik,
+            aciklama:aciklama,
+            resim:resim,
+            anasayfa:anasayfa,
+            onay:onay,
+            categoryid:kategori
+        }) 
         res.redirect("/admin/blogs?action=create"); 
 
     } catch (error) {
@@ -121,7 +127,7 @@ router.get( "/category/create", async(req ,res) => {
 router.post("/category/create" , async (req, res) => {
     const name = req.body.name;
     try {
-        await db.query("INSERT INTO category(name) VALUES(?)", [name]) 
+        await Category.create({name: name})
         res.redirect("/admin/categories?action=create"); 
 
     } catch (error) {
@@ -150,7 +156,6 @@ router.get( "/blog/:blogid",  async(req ,res) => {
         console.log(error);
     }
 }  )
-
 
 router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,res) => { 
     const blogid = req.body.blogid;
@@ -181,8 +186,6 @@ router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,re
     }
 
 }  )
-
-//categories
 
 router.get( "/categories/:categoryid", async(req ,res) => { 
 
@@ -252,24 +255,31 @@ router.get( "/categories", async(req ,res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router
 
+/*
+ÖNCESİ
+ db.query("INSERT INTO blog(baslik,altbaslik,aciklama,resim,anasayfa,onay,categoryid) VALUES(?,?,?,?,?,?,?)", [baslik,altbaslik ,aciklama ,resim ,anasayfa ,onay, kategori  ] )
+
+
+SONRASI
+ Blog.create({
+            baslik:baslik,
+            altbaslik:altbaslik,
+            aciklama:aciklama,
+            resim:resim,
+            anasayfa:anasayfa,
+            onay:onay,
+            categoryid:kategori
+        })
+
+ÖNCESİ
+ db.query("INSERT INTO category(name) VALUES(?)", [name]) 
+
+
+ SONRASI 
+ Category.create({name: name}) 
+
+
+ eskiden bu şekilde uzun SQL sorguları yazıyorduk ama artık sequelize kullandığımız için bu şekilde yapmamıza gerek yok.
+*/
