@@ -302,41 +302,8 @@ router.get( "/categories", async(req ,res) => {
 module.exports = router
 
 /*
-ONCESİ
-        await db.query("DELETE from blog where blogid=?" , [blogid])
-
-
-SONRASI
-
-        const blog = await Blog.findByPk(blogid)
-
-        if (blog) {                                        //---> bir blog değeri gelirse destroy() diyerek sileceğiz
-            await blog.destroy();
-            return res.redirect("/admin/blogs?action=delete") 
-        }
-
-VERİ TABANINDAN HERŞEYİ SİLMEK İSTİYORSAK
-
-await. xxx.destroy({          //->>> tablo üzerindeki tüm verileri silmiş oluruz.
-    truncate: ture
-})
-
-
-
-    ONCESİ
-    await db.query("DELETE from category where category_id=?" , [categoryid])
-
-    SONRASI
-
-    await Category.destroy({
-        where:{
-            categoryid:categoryid //--->>> bu şekilde where sorgusu ile de silme işlemi yapabiliriz yapılabilir
-        }
-    })
-
-
         
 */
 
-
+  
 
