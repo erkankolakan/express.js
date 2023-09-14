@@ -1,26 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../data/db")
 const imageUpload = require("../helpers/image-upload")
 const fs = require("fs") 
 
 const Blog = require("../models/blog") 
 const Category = require("../models/category")//oluşturmuş olduğumuz databaseleri buraya çağırıyoruz.
 
-
-
 router.get("/blog/delete/:blogid", async(req, res) =>{
 
     const blogid = req.params.blogid
 
     try {
-        const [blogs, ] = await db.query("select * from blog where blogid=?", [blogid])
-        const blog = blogs[0];
+        const blog = await Blog.findByPk(blogid)
 
-        res.render("admin/blog-delete",{
+        if (blog) {
+            res.render("admin/blog-delete",{
             title:"blog sileme işlemleri",
             blog:blog,
         })
+    }
+        res.redirect("admin/blogs")
+
+      
 
     } catch (error) {
         console.log(error);
@@ -31,8 +32,14 @@ router.post("/blog/delete/:blogid" , async (req,res) =>{
     const blogid = req.body.blogid; 
     
     try {
-        await db.query("DELETE from blog where blogid=?" , [blogid])
-        res.redirect("/admin/blogs?action=delete") 
+        const blog = await Blog.findByPk(blogid)
+
+        if (blog) {                                        //---> bir blog değeri gelirse destroy() diyerek sileceğiz
+            await blog.destroy();
+            return res.redirect("/admin/blogs?action=delete") 
+        }
+            res.redirect("/admin/blogs") 
+
         
     } catch (error) {
         console.log(error);
@@ -45,13 +52,16 @@ router.get("/categories/delete/:categoryid", async(req, res) =>{
     const categoryid = req.params.categoryid
 
     try {
-        const [categories, ] = await db.query("select * from category where category_id=?", [categoryid])
-        const category = categories[0];
+        const category = await Category.findByPk(categoryid)
 
-        res.render("admin/category-delete",{
+        if (category) {
+            res.render("admin/category-delete",{
             title:"category sileme işlemleri",
             category:category,
         })
+        }
+
+
 
     } catch (error) {
         console.log(error);
@@ -60,9 +70,13 @@ router.get("/categories/delete/:categoryid", async(req, res) =>{
 
 router.post("/categories/delete/:categoryid" , async (req,res) =>{
     const categoryid = req.body.categoryid;  
-    
     try {
-        await db.query("DELETE from category where category_id=?" , [categoryid])
+
+        await Category.destroy({
+            where:{
+                category_id:categoryid      //--->>> category tablosu üzerinde category_id değeri categoryid ye eşit olan kaydı sil demiş oluyoruz
+            }
+        })
         res.redirect("/admin/categories?action=delete") 
         
     } catch (error) {
@@ -150,13 +164,9 @@ router.get( "/blog/:blogid",  async(req ,res) => {
                 title: blog.dataValues.baslik,
                 blog: blog.dataValues,
                 categories: categories,
-                
-                
             }
-            
             )
         }
-
 
         res.redirect("admin/blogs") 
 
@@ -247,9 +257,6 @@ router.post( "/categories/:categoryid", async(req ,res) => {
                 }
             });
             return res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
-    /*
-        Burada categoryid si eşleşen kaydın name değerini güncellemiş oluyoruz. Bunu bir koşul ile yapıyoruz. Bunu şu şekilde de kullanabiliriz. Tüm verileri elimize alırız ve bize gelen gelerlerden resim : null olan tüm değerlere resim: user.jpg değerini ver de diiyebiliriz
-    */
     } catch (error) {
         console.log(error);
     }
@@ -295,60 +302,40 @@ router.get( "/categories", async(req ,res) => {
 module.exports = router
 
 /*
+ONCESİ
+        await db.query("DELETE from blog where blogid=?" , [blogid])
 
-
-ÖNCESİ
-
-// await db.query("UPDATE blog SET baslik = ?,altbaslik = ? ,aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, altbaslik ,aciklama, resim, anasayfa, onay, kategoriid, blogid]);
 
 SONRASI
-        if(blog){ // eğer bir blog a eriştiysek
-            blog.altbaslik = altbaslik;
-            blog.baslik = baslik; 
-            blog.aciklama = aciklama; 
-            blog.resim = resim; 
-            blog.anasayfa = anasayfa; 
-            blog.onay = onay; 
-            blog.category_id = kategoriid; 
 
-            await blog.save() // ->> SAVE DEMEZSEN VERİ TABANINA BU VERİLERİ İŞLEMZ await demezsen işlem bitmeden geçer
-            res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
-        }
-aslında burada çok temel bir mantık yatıyor. Blog da bulunan değerlere üsen yeni gelen değerleri aktar demiş oluyoruz.
+        const blog = await Blog.findByPk(blogid)
 
-ASLINDA DAHA KOLAY BİR YOLU VAR
-
-        if(blog){ // eğer bir blog a eriştiysek
-
-            blog.update({                                      -----> update yöntemini kullanırsak xxx.save() dememize gerek kalmaz
-                altbaslik : altbaslik,
-                baslik : baslik,
-                aciklama : aciklama,
-                resim : resim,
-                anasayfa : anasayfa,
-                onay : onay,
-                category_id : kategoriid
-            })
-            
-            return res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
+        if (blog) {                                        //---> bir blog değeri gelirse destroy() diyerek sileceğiz
+            await blog.destroy();
+            return res.redirect("/admin/blogs?action=delete") 
         }
 
-SORGU İLE VERİ GÜNCELLEME
+VERİ TABANINDAN HERŞEYİ SİLMEK İSTİYORSAK
 
-    try {
-            await Category.update({name : name} , {
-                where: {
-                    category_id: categoryid
-                }
-            });
-            return res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
+await. xxx.destroy({          //->>> tablo üzerindeki tüm verileri silmiş oluruz.
+    truncate: ture
+})
 
-    } catch (error) {
-        console.log(error);
-    }
 
-        Burada categoryid si eşleşen kaydın name değerini güncellemiş oluyoruz. Bunu bir koşul ile yapıyoruz. Bunu şu şekilde de kullanabiliriz. Tüm verileri elimize alırız ve bize gelen gelerlerden resim : null olan tüm değerlere resim: user.jpg değerini ver de diiyebiliriz
 
+    ONCESİ
+    await db.query("DELETE from category where category_id=?" , [categoryid])
+
+    SONRASI
+
+    await Category.destroy({
+        where:{
+            categoryid:categoryid //--->>> bu şekilde where sorgusu ile de silme işlemi yapabiliriz yapılabilir
+        }
+    })
+
+
+        
 */
 
 
