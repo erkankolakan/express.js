@@ -3,17 +3,6 @@ const sequelize = require("../data/db")
 
 const Blog = sequelize.define("blog" , { 
   
-    /*
-    blogid:{ 
-        type: DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true,
-    },
-
-        Hatda her bir modele de id eklememiz gerekmez zaten her bir modelin burada uygulamış olduğumuz özelliklerde bir id bilgisi olacak dolayısıyla ben burayıda siliyorum
-    */
-
     baslik:{
         type: DataTypes.STRING,
         allowNull:false, 
@@ -38,14 +27,7 @@ const Blog = sequelize.define("blog" , {
         type:DataTypes.BOOLEAN,
         allowNull:false
     }
-    /* ,
-    // categoryid:{
-    //     type:DataTypes.INTEGER, //---->> bunun burdan kaldırıyoruz bunu kendisi otomatik bir şekilde keliyor olacağızç 
-    //     allowNull:false
-     } */
-
 })
-
 
 
  module.exports = Blog;

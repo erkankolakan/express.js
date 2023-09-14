@@ -4,7 +4,7 @@ const imageUpload = require("../helpers/image-upload")
 const fs = require("fs") 
 
 const Blog = require("../models/blog") 
-const Category = require("../models/category")//oluşturmuş olduğumuz databaseleri buraya çağırıyoruz.
+const Category = require("../models/category")
 
 router.get("/blog/delete/:blogid", async(req, res) =>{
 
@@ -74,7 +74,7 @@ router.post("/categories/delete/:categoryid" , async (req,res) =>{
 
         await Category.destroy({
             where:{
-                category_id:categoryid      //--->>> category tablosu üzerinde category_id değeri categoryid ye eşit olan kaydı sil demiş oluyoruz
+                category_id:categoryid    
             }
         })
         res.redirect("/admin/categories?action=delete") 
@@ -298,12 +298,7 @@ router.get( "/categories", async(req ,res) => {
 })
 
 
-
 module.exports = router
-
-/*
-        
-*/
 
   
 

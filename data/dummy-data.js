@@ -3,13 +3,13 @@ const Blog = require("../model/blog")
 
  const populate = async() => {
     
-    const count = await Category.count() //blog da ki bilgileri de sayabilir hiç önemli değil. Sonuç olarak değer yoksa değer ekliecek
+    const count = await Category.count() 
 
 if (count == 0) {
   
-    if (count == 0) { //eğer category sayısı 0 sa demekki tablo olarak herhangi birşey eklenmemiş dolayısıyla category bilgisini veri tabanına ekleyebiliriz.
+    if (count == 0) { 
 
-    await Category.bulkCreate([ //bu şekilde toplu oluşsturma işlemleri de yapabiliriz
+    await Category.bulkCreate([ 
         {name:"Web Geliştirme"},
         {name:"Mobil Uygulama Geliştirme"},
         {name:"Programlama"},
@@ -24,7 +24,7 @@ if (count == 0) {
             resim:"1.jpg",
             anasayfa:true,
             onay:true,
-            categoryId:1 //bunlarda otomatik bir şekilde model ismi ve Büyük harfle Id gelir ->> xxxxId
+            categoryId:1 
         },
         {
             baslik:"Node.js ile Sıfırdan İleri Seviye Web Geliştirme",
