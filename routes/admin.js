@@ -183,12 +183,28 @@ router.post( "/blog/:blogid", imageUpload.upload.single("resim") , async(req ,re
     const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; 
     const onay = req.body.onay == "on" ? "1" : "0" ; 
     const kategoriid = req.body.kategori; 
-    console.log(req.body)
 
     try {
-        await db.query("UPDATE blog SET baslik = ?,altbaslik = ? ,aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, altbaslik ,aciklama, resim, anasayfa, onay, kategoriid, blogid]);
 
-        res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
+        const blog = await Blog.findByPk(blogid)
+
+        if(blog){ // eğer bir blog a eriştiysek
+
+            blog.update({
+                altbaslik : altbaslik,
+                baslik : baslik,
+                aciklama : aciklama,
+                resim : resim,
+                anasayfa : anasayfa,
+                onay : onay,
+                category_id : kategoriid
+            })
+
+            return res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
+
+        }
+        res.redirect("/admin/blogs") 
+
     } catch (error) {
         console.log(error);
     }
@@ -225,13 +241,15 @@ router.post( "/categories/:categoryid", async(req ,res) => {
 
 
     try {
-        await db.query("UPDATE category SET name = ? WHERE category_id = ?", [name, categoryid]); 
-
-
-
-
-        res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
-
+            await Category.update({name : name} , {
+                where: {
+                    category_id: categoryid
+                }
+            });
+            return res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
+    /*
+        Burada categoryid si eşleşen kaydın name değerini güncellemiş oluyoruz. Bunu bir koşul ile yapıyoruz. Bunu şu şekilde de kullanabiliriz. Tüm verileri elimize alırız ve bize gelen gelerlerden resim : null olan tüm değerlere resim: user.jpg değerini ver de diiyebiliriz
+    */
     } catch (error) {
         console.log(error);
     }
@@ -278,51 +296,58 @@ module.exports = router
 
 /*
 
-findAll() -> bize bir liste döndürür bu liste içerisinde işimize yaramayacak olan tablo bilgileri de gelir bunun içinden sıyrılmak için yine [categoryies, ] fln yapabilir ama sequelize bize daha iyi şeyler sunar.
-
-findByPk() -> primary keyine göre istediğimiz veriyi çekebilir ve bu çektiğimiz veri geriye bir obje döndürür. findNyPk(2) dersek id değeri 2 olan değeri getirir Buda bize direk dataValues ile direk istediğimiz veriye ulaşmamızı sağlar.
-
-findOne() -> değerine göre istediğimiz veriyi çekebilir ve bu çektiğimiz veri geriye bir obje döndürür.
-
-
-
-/*
 
 ÖNCESİ
-// const [categories,] = await db.query("select * from category where category_id=?", [categoryid])  
+
+// await db.query("UPDATE blog SET baslik = ?,altbaslik = ? ,aciklama = ?, resim = ?, anasayfa = ?, onay = ?, categoryid = ? WHERE blogid = ?", [baslik, altbaslik ,aciklama, resim, anasayfa, onay, kategoriid, blogid]);
 
 SONRASI
-    const category = await Category.findAll({ //tüm verileri çekerken sorgu yapar
-        where:{
-            category_id:categoryid
-        //burada kriterleri belirliyorsunuz
-        //Category tablosundaki categoryid değerinin yukarıdan gelen categoryid değerine eşit olması gerektiğini söylüyoruz.
+        if(blog){ // eğer bir blog a eriştiysek
+            blog.altbaslik = altbaslik;
+            blog.baslik = baslik; 
+            blog.aciklama = aciklama; 
+            blog.resim = resim; 
+            blog.anasayfa = anasayfa; 
+            blog.onay = onay; 
+            blog.category_id = kategoriid; 
+
+            await blog.save() // ->> SAVE DEMEZSEN VERİ TABANINA BU VERİLERİ İŞLEMZ await demezsen işlem bitmeden geçer
+            res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
         }
-    })
+aslında burada çok temel bir mantık yatıyor. Blog da bulunan değerlere üsen yeni gelen değerleri aktar demiş oluyoruz.
 
-veya
+ASLINDA DAHA KOLAY BİR YOLU VAR
 
-    const category = await Category.findOne({ //sadece birtane veri çekmeye yöneliktir
-        where:{
-            category_id:categoryid
-        //burada kriterleri belirliyorsunuz
-        //Category tablosundaki categoryid değerinin yukarıdan gelen categoryid değerine eşit olması gerektiğini söylüyoruz.
+        if(blog){ // eğer bir blog a eriştiysek
+
+            blog.update({                                      -----> update yöntemini kullanırsak xxx.save() dememize gerek kalmaz
+                altbaslik : altbaslik,
+                baslik : baslik,
+                aciklama : aciklama,
+                resim : resim,
+                anasayfa : anasayfa,
+                onay : onay,
+                category_id : kategoriid
+            })
+            
+            return res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
         }
-    })
 
-veya
+SORGU İLE VERİ GÜNCELLEME
 
-    const categoryid = req.params.categoryid  -> //pk ya göre veri çeker ------- categoryid = primary key dir 
+    try {
+            await Category.update({name : name} , {
+                where: {
+                    category_id: categoryid
+                }
+            });
+            return res.redirect("/admin/categories?action=edit&categoryid=" + categoryid) 
 
-    const category = await Category.findByPk(categoryid)
+    } catch (error) {
+        console.log(error);
+    }
 
-ÖNCESİ
-        const [blogs,] = await db.query("select * from blog where blogid=?", [blogid]) 
-
-
-SONRASI
-        const blogs = Blog.findByPk(blogid)
-
+        Burada categoryid si eşleşen kaydın name değerini güncellemiş oluyoruz. Bunu bir koşul ile yapıyoruz. Bunu şu şekilde de kullanabiliriz. Tüm verileri elimize alırız ve bize gelen gelerlerden resim : null olan tüm değerlere resim: user.jpg değerini ver de diiyebiliriz
 
 */
 

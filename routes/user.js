@@ -1,12 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../data/db")
-
 
 const Blog = require("../models/blog") 
-const Category = require("../models/category")//oluşturmuş olduğumuz databaseleri buraya çağırıyoruz.
-
-const {Op} = require("sequelize") //sorgularda and, or, between gibi ifadeler kullanamak istiyorsak Op (operator) u çağırman gerek
+const Category = require("../models/category")
+const {Op} = require("sequelize") 
 
 
 router.use("/blogs/category/:categoryid" , async (req , res) => {
@@ -19,7 +16,7 @@ router.use("/blogs/category/:categoryid" , async (req , res) => {
                 categoryid:id,
                 onay:true
             },
-            raw:true // !!! raw:true yazmasak HTML sayfası üzerinde değişiklik yapmak zorunda kalırdık
+            raw:true 
         })
         const categories = await Category.findAll({raw:true})
 
@@ -35,20 +32,12 @@ router.use("/blogs/category/:categoryid" , async (req , res) => {
     }
 })
 
-
-
-
 router.use( "/blogs/:blogid", async(req ,res) => {
 
     const id = req.params.blogid 
 
     try {
-        const blog = await Blog.findByPk(id)  //bu şekilde id yi Blog a gönderdiğin zaman o değere eşit PK geliyor ztn
-
-
-
-
-
+        const blog = await Blog.findByPk(id)  
       
         if (blog) { 
             return res.render("users/blogDetails" , {
@@ -68,10 +57,10 @@ router.use( "/blogs", async(req ,res) => {
         const blogs = await Blog.findAll({
             where:{
                 onay:{
-                    [Op.eq]: true //burada dediği aslında onay=1 olanlar. (Op yi göstermek amaçlı böyle yazdım)
+                    [Op.eq]: true 
                 }
             },
-            raw:true //dersek sadece bilgiyle uğraşırız extra bilgiler çöpeee
+            raw:true 
         })
         const categories = await Category.findAll({raw:true})
 
@@ -120,56 +109,3 @@ router.use( "/", async(req ,res) => {
 }  )
 module.exports= router
 
-
-
-/*
-    ONCESİ
-    db.query("select * from blog where onay=1 and anasayfa=1")
-
-    SONRASI
-    const blogs = await Blog.findAll({
-    where:{
-        onay:true,
-        anasayfa:true
-    },
-    raw: true 
-----------------------------------------------------------------------------
-
-    const blogs = await Blog.findAll({
-        where:{
-            onay:{
-                [Op.eq]: true //burada dediği aslında onay=1 olanlar. (Op yi göstermek amaçlı böyle yazdım)
-            }
-        },
-        raw:true //dersek sadece bilgiyle uğraşırız extra bilgiler çöpeee
-    })
-
-    şeklinde de yapılabilir
-
-    const blogs = await Blog.findAll({
-        where:{
-            onay:1
-        }
-    })
-
----------------------------------------------------------------------------
-
-         const blog = await Blog.findOne({
-             where: {
-                 blogid:id                        ->> findOne ile kullanımı
-             },
-                 raw:true
-         })
-
-        const blog = await Blog.findOne({
-            where:{
-                blogid:{
-                    [Op.eq]:id                   ->> Operator ile kullanımı       
-                }
-            }
-        })
-
-
-        const blog = await Blog.findByPk(id)      ->> findBtPk ile kullanımı   aynı değeri birden fazla şekilde kolayca çağırabiliyoruz
-
-*/
