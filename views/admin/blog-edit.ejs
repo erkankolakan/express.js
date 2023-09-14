@@ -14,7 +14,7 @@
                 <form method="post"   enctype="multipart/form-data" > 
 <!-- eski resmi tutmamız için oldukça önemlidir -->
                     <input type="hidden" name="resim" value="<%= blog.resim %>">  
-                    <input type="hidden" name="blogid" value="<%= blog.blogid %>">
+                    <input type="hidden" name="blogid" value="<%= blog.id %>">
                     <div class="row mb-3"> 
                         <label for="baslik" class="col-sm-2 col-form-label">Başlık</label>
                         <div class="col-sm-8">
@@ -51,12 +51,12 @@
             <select name="kategori" id="kategori" class="form-select">
                 <option value="-1">Kategori Seçiniz</option>
                     <% categories.forEach(category => { %>
-                        <option value="<%= category.dataValues.category_id %>" selected ><%= category.dataValues.name %></option>
+                        <option value="<%= category.dataValues.id %>" selected ><%= category.dataValues.name %></option>
                     <% }) %>
             </select>
 
             <script>
-                document.querySelector("#kategori").value = "<%= blog.categoryid %>"
+                document.querySelector("#kategori").value = "<%= blog.id %>"
             </script>
     </div>
     </div>

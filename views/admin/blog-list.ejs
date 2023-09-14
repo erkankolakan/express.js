@@ -43,7 +43,7 @@
                     <tbody>
                         <% blogs.forEach(element => { %>
                             <tr>
-                                <td># <%= element.dataValues.blogid %></td>
+                                <td># <%= element.dataValues.id %></td>
                                 <td>
                                     <img src="/static/images/<%= element.dataValues.resim %>" class="img-fluid"  width="400" height="200"  alt="">
                                     <!-- static/images sabit gelecek resim bilgiside datadan gelecek -->
@@ -52,8 +52,8 @@
                                     <%= element.dataValues.baslik %>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-primary" href="/admin/blog/<%= element.dataValues.blogid %>">düzenle</a>
-                                    <a class="btn btn-sm btn-danger" href="/admin/blog/delete/<%= element.dataValues.blogid %>">sil</a>
+                                    <a class="btn btn-sm btn-primary" href="/admin/blog/<%= element.dataValues.id %>">düzenle</a>
+                                    <a class="btn btn-sm btn-danger" href="/admin/blog/delete/<%= element.dataValues.id %>">sil</a>
                                 </td>
                             </tr>
                         <% }) %>

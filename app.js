@@ -12,8 +12,6 @@ app.set("view engine","ejs")
 app.use("/libs" , express.static(path.join(__dirname,"node_modules")))
 app.use("/static", express.static(path.join(__dirname,"public")))    
 
-
-
     app.use("/admin",adminRoutes); 
     app.use(userRoutes); 
 
@@ -25,16 +23,13 @@ app.use("/static", express.static(path.join(__dirname,"public")))
 
     //ilişkiler
     //one to many (bire çok ilişki)
-        Category.hasMany(Blog,{  
+        Category.hasMany(Blog, {  
             foreignKey:{
                 name:"categoryId",
                 allowNull:false, 
-
             }
-        });             
-        Blog.belongsTo(Category) 
-
-
+        });
+        Blog.belongsTo(Category);
 
 
     ( async () => {
@@ -43,13 +38,7 @@ app.use("/static", express.static(path.join(__dirname,"public")))
     })();
 
 
-
-
     app.listen(3000 , () => {
         console.log("Server started on port 3000");
     })
-
-
-
-
-
+    
