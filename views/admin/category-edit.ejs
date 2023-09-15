@@ -30,6 +30,40 @@
                     </form>
 
             </div>
+            
+            <p>Bu kategoriye ait <%= countBlog %> blog var</p>     
+
+            <table class="table table-bordered table-striped" >
+                <thead>
+                    <tr>
+                        <th style="width:50px;">id</th>
+                        <th style="width:150px;">resim</th>
+                        <th>baslik</th>
+                        <th style="width:130px;">id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% blogs.forEach(element => { %>
+                        <tr>
+                            <td># <%= element.dataValues.id %></td>
+                            <td>
+                                <img src="/static/images/<%= element.dataValues.resim %>" class="img-fluid"  width="400" height="200"  alt="">
+                                <!-- static/images sabit gelecek resim bilgiside datadan gelecek -->
+                            </td>
+                            <td>
+                                <%= element.dataValues.baslik %>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" href="/admin/blog/<%= element.dataValues.id %>">düzenle</a>
+                                <a class="btn btn-sm btn-danger" href="/admin/blog/delete/<%= element.dataValues.id %>">sil</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+
+                </tbody>
+            </table>
+
+            
         </div>
     </div>
 

@@ -218,14 +218,21 @@ exports.get_category_edit = async(req ,res) => {
 
     const categoryid = req.params.categoryid 
 
+// bu şekilde parça parça await dedik veri gitsin daha sonra ona geç dediğimiz parça parça veri göndermeye Layz Loading denir.
     try {
         const category = await Category.findByPk(categoryid)
-//findByPk kullanarak direk pk e göre çekebiliriz. Kolon bilgisini eler ama yine dataValues üzerinden bilgiyi çekmen gerek
+        const blogs = await category.getBlogs() //-->> bize bu kategoriye ait olan tüm blog blog bilgilerini getirir
+        const countBlog = await category.countBlogs() //-->> bize bu katagoriye ait kaç tane blog olduğunu söyler. Bu gibi bize kolaylık sağlayan methodlar var. Siteden bakk
 
-        if (category) {
+/*ilişkili olan metodların bize getirmiş olduğu extra methodlar var. category üzerinden üretilmiş olan bir instace var bu instace üzerinden bize getBlogs adında bir method otomatik bir şekilde oluşturulur. peki neden getBlogs diye birşye oluştu ???
+Çünkü category üzerinden ulaşabileceğimiz birden fazla blog var çoğul olarak ve model ismimizde blog çoğul olduğu içim s takısını kendi ekliyor, Blogs yapıyor ve get diyerekde biz bu blog bilgilerini alıp direk sayfaya önderebiliyoruz. 
+*/
+         if (category) {
             return res.render("admin/category-edit",{ 
                 title: category.dataValues.name,
-                category: category.dataValues
+                category: category.dataValues,
+                blogs: blogs,
+                countBlog: countBlog
             })}
         res.redirect("admin/categories") 
 
