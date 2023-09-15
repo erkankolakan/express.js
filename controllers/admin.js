@@ -218,15 +218,11 @@ exports.get_category_edit = async(req ,res) => {
 
     const categoryid = req.params.categoryid 
 
-// bu şekilde parça parça await dedik veri gitsin daha sonra ona geç dediğimiz parça parça veri göndermeye Layz Loading denir.
     try {
         const category = await Category.findByPk(categoryid)
-        const blogs = await category.getBlogs() //-->> bize bu kategoriye ait olan tüm blog blog bilgilerini getirir
-        const countBlog = await category.countBlogs() //-->> bize bu katagoriye ait kaç tane blog olduğunu söyler. Bu gibi bize kolaylık sağlayan methodlar var. Siteden bakk
+        const blogs = await category.getBlogs()
+        const countBlog = await category.countBlogs() 
 
-/*ilişkili olan metodların bize getirmiş olduğu extra methodlar var. category üzerinden üretilmiş olan bir instace var bu instace üzerinden bize getBlogs adında bir method otomatik bir şekilde oluşturulur. peki neden getBlogs diye birşye oluştu ???
-Çünkü category üzerinden ulaşabileceğimiz birden fazla blog var çoğul olarak ve model ismimizde blog çoğul olduğu içim s takısını kendi ekliyor, Blogs yapıyor ve get diyerekde biz bu blog bilgilerini alıp direk sayfaya önderebiliyoruz. 
-*/
          if (category) {
             return res.render("admin/category-edit",{ 
                 title: category.dataValues.name,
@@ -259,11 +255,29 @@ exports.post_category_edit = async(req ,res) => {
 
 exports.get_blogs =  async(req ,res) => {
 
+/*(include = katmak)*/  // bu şekilde tek seferde veri gönderme yede Eager Loading denir 
     try {
-        const blogs = await Blog.findAll({
-            attributes:["id", "baslik", "altbaslik", "resim"]
-        }) //Blog tablesinden blogid baslik altbaslik, resim bilgileri gelsin. 
+        const blogs = await Blog.findAll({   
+            attributes:["id", "baslik", "altbaslik", "resim"],
+            include: {
+                model:Category, //Category bizim üste çağırmış olduğumuz const Category = require("../models/category") den gelir.
+                attributes:["name"]  // bize normalde catgeornin tüm bilgileri gelir ama bu işimize yaramaz burada sadece name alanını kullancağım için sadece ihtiyacım olan ksımı bu şekilde çağırabilirim
+            }
+        }) 
+/* 
+    include: Category // bu şekilde ekleme yaptığımız zaman Category deki tüm bilgileri getirir.
+*/
 
+/*
+    Biz bu sayde ne yapmış olduk Blogdaki -> id, baslik, altbaslik, resim bilgilerini aldık aynı zamanda onları alırken Category bilgilerinide aldık bu bilgiler bize aşağıdaki gibi gelir. Bu öyle bildiğimiz category değil ama çağırdığımız bloga ait category bilgisi gelmiş olur.
+         {
+             id,
+             baslik,
+             category:{
+                 name: "Web gelistime"  -->> !!!!!! blogun kategori ismi gelecektir !!!!!!
+             }
+         }
+*/
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,
