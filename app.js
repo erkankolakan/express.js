@@ -25,15 +25,23 @@ app.use("/static", express.static(path.join(__dirname,"public")))
     //one to many (bire çok ilişki)
         Category.hasMany(Blog, {  
             foreignKey:{
-                name:"categoryId",
+                name:"categoryId",  
                 allowNull:false, 
-            }
+            },
+            onDelete: "RESTRICT",
+            onUpdate: "RESTRICT"
+/*
+    Biz herhangi bir bloga bağlı bir kategoriyi sildiğimiz zaman bize hata döndürmesini söyleyebilir hatta bu hatayı catch de yakalıp kullanıcıya gösterebilirim. ör/ Bu kategoriye bağlı iki tane blog bilgisi var silmek istediğinize emin misiniz. Default değerde yani (ON DELETE SET NULL ON UPDATE SET NULL) değerinde direk sorgusuz sualiz bağlı blogları siliyordu
+    
+    onDelete: "RESTRICT"  -->> silme işlemi için  
+    onUpdate: "RESTRICT"  -->> güncelleme için --- ör/ ben bir pk id bilgisini kategori için değiştiridim bu durumda o kategoroninin karşılık geldiğim tüm bloglarda o bilgiler güncellenmiş olur. 
+*/
+
         });
         Blog.belongsTo(Category);
 
-
     ( async () => {
-        await sequelize.sync({ force: true })
+        await sequelize.sync({ alter: true })
         await dummyData();  
     })();
 
