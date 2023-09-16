@@ -12,9 +12,12 @@ exports.bogs_by_category = async (req , res) => {     //fonksiyonları dışarı
 
         const blogs = await Blog.findAll({
             where:{
-                categoryId:id,
                 onay:true
             },
+            include:{
+                    model: Category,
+                    where:{id:id}
+                },
             raw:true 
         })
         const categories = await Category.findAll({raw:true})
