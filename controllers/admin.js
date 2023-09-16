@@ -214,7 +214,7 @@ exports.post_blog_edit = async(req ,res) => {
             }
         })
 
-        if(blog){ // eğer bir blog a eriştiysek
+        if(blog){
 
             if (blog) {
                 blog.update({
@@ -226,23 +226,20 @@ exports.post_blog_edit = async(req ,res) => {
                     onay : onay,
             });
 
-                if (kategoriIds == undefined) {  //kullanıcı herhangi bir kategori seçmemiş 
+                if (kategoriIds == undefined) {  
                     await blog.removeCategories(blog.categories) 
-//Gelen blog üzerinden removeCategories diyerek blog içerisinden gelen categoriesleri  ilgili blogla olan ilişkilendirmesini sil diyebiliriz.
-//Veri tabanından silmiyoruz, blog üzerinden tek bir obje üzerinden çağrılan bir method çoğul olarak biz buna kategori listesi göndericez ve bu listeyi kendinin bağlı olduğu ilişkilendirmeyi 3. tablodan silicek.
-//!!! kısacası adam burada bir şey saçmezse ilişkilendirmeyi kaldırıyoruz. 
+
                 }else{
-                    await blog.removeCategories(blog.categories) // blog kategorileri varsa bunları temizleyelim silelim sıfırdan başlayalım
+                    await blog.removeCategories(blog.categories) 
                 
                 const selectedCategories = await Category.findAll({
                     where:{
                         id: {
                             [Op.in] : kategoriIds
-                        }  //(id sinin 1 2 3  olan categorileri veri tabanından seç)
+                        }  
 
-// select * from categories where IN (1,2,3) ->  [Op.in] (Sequelize'de bir operatördür) kullanarak, "id" değerlerinin kategoriIds dizisinde bulunan herhangi bir değere eşleştiği kategorileri seçmeye çalışırız.
                     }
-//id ye göre kategorilerimi seçicem ve seçitiğimiz blog ile ilişkilendiricez. Çünkü mevcut bloğun bütün kategorilerini         tabanındansildik. Artık herhangi bir ilişki yok blog ile kategori arasında. kategoriIds den yani seçtiğimiz check boxlardan           bir dizi dönüyordönen o diziye göre bizde blog ile ilişkilendirmesini yapacağız.
+
                 })
                 await blog.addCategories(selectedCategories) //seçilen katagorileride benim mevcut blogumla ilişkilendir.
             }
