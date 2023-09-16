@@ -1,6 +1,7 @@
 const Blog = require("../models/blog")
 const Category = require("../models/category")
 const fs = require("fs")
+const {Op} = require("sequelize")  
 
 
 exports.get_blog_delete = async(req, res) =>{
@@ -183,7 +184,10 @@ exports.post_blog_edit = async(req ,res) => {
     const altbaslik = req.body.altbaslik;
     const baslik = req.body.baslik; 
     const aciklama = req.body.aciklama; 
+    const kategoriIds = req.body.categories;
     let resim = req.body.resim;
+    console.log(kategoriIds , "xxxxxxxxxxxxxxxxxxxx");
+ 
 
     if (req.file) {
         resim = req.file.filename;
@@ -195,33 +199,62 @@ exports.post_blog_edit = async(req ,res) => {
 
     const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; 
     const onay = req.body.onay == "on" ? "1" : "0" ; 
-    const kategoriid = req.body.kategori; 
+
+
 
     try {
-
-        const blog = await Blog.findByPk(blogid)
+        
+        const blog = await Blog.findOne({
+            where:{
+                id : blogid            
+            },
+            include:{ 
+                model:Category,
+                attributes:["id"] 
+            }
+        })
 
         if(blog){ // eğer bir blog a eriştiysek
 
-            blog.update({
-                altbaslik : altbaslik,
-                baslik : baslik,
-                aciklama : aciklama,
-                resim : resim,
-                anasayfa : anasayfa,
-                onay : onay,
-                id : kategoriid
-            })
+            if (blog) {
+                blog.update({
+                    altbaslik : altbaslik,
+                    baslik : baslik,
+                    aciklama : aciklama,
+                    resim : resim,
+                    anasayfa : anasayfa,
+                    onay : onay,
+            });
+
+                if (kategoriIds == undefined) {  //kullanıcı herhangi bir kategori seçmemiş 
+                    await blog.removeCategories(blog.categories) 
+//Gelen blog üzerinden removeCategories diyerek blog içerisinden gelen categoriesleri  ilgili blogla olan ilişkilendirmesini sil diyebiliriz.
+//Veri tabanından silmiyoruz, blog üzerinden tek bir obje üzerinden çağrılan bir method çoğul olarak biz buna kategori listesi göndericez ve bu listeyi kendinin bağlı olduğu ilişkilendirmeyi 3. tablodan silicek.
+//!!! kısacası adam burada bir şey saçmezse ilişkilendirmeyi kaldırıyoruz. 
+                }else{
+                    await blog.removeCategories(blog.categories) // blog kategorileri varsa bunları temizleyelim silelim sıfırdan başlayalım
+                
+                const selectedCategories = await Category.findAll({
+                    where:{
+                        id: {
+                            [Op.in] : kategoriIds
+                        }  //(id sinin 1 2 3  olan categorileri veri tabanından seç)
+
+// select * from categories where IN (1,2,3) ->  [Op.in] (Sequelize'de bir operatördür) kullanarak, "id" değerlerinin kategoriIds dizisinde bulunan herhangi bir değere eşleştiği kategorileri seçmeye çalışırız.
+                    }
+//id ye göre kategorilerimi seçicem ve seçitiğimiz blog ile ilişkilendiricez. Çünkü mevcut bloğun bütün kategorilerini         tabanındansildik. Artık herhangi bir ilişki yok blog ile kategori arasında. kategoriIds den yani seçtiğimiz check boxlardan           bir dizi dönüyordönen o diziye göre bizde blog ile ilişkilendirmesini yapacağız.
+                })
+                await blog.addCategories(selectedCategories) //seçilen katagorileride benim mevcut blogumla ilişkilendir.
+            }
+            }
 
             return res.redirect("/admin/blogs?action=edit&blogid=" + blogid) 
-
         }
         res.redirect("/admin/blogs") 
 
     } catch (error) {
         console.log(error);
     }
-
 } 
 
 exports.get_category_edit = async(req ,res) => { 

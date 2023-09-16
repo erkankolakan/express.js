@@ -8,11 +8,10 @@
     <%- include('../partials/nav') %> 
 
     <div class="container mt-3 ">
-        <div class="row">
-            <div class="col-md-10 ">
-<!-- yine bir data taşıyacağımız için forma enctype="multipart/form-data" yazıyoruz. Kısacasıı hangi sayfada data taşıyorsak özelliği eklememiz gerekir. -->
-                <form method="post"   enctype="multipart/form-data" > 
-<!-- eski resmi tutmamız için oldukça önemlidir -->
+        <form method="post"   enctype="multipart/form-data" > 
+
+            <div class="row">
+                <div class="col-md-10 ">
                     <input type="hidden" name="resim" value="<%= blog.resim %>">  
                     <input type="hidden" name="blogid" value="<%= blog.id %>">
                     <div class="row mb-3"> 
@@ -51,9 +50,6 @@
             </div>
         </div>
 
-                </form>
-
-             
             </div>
             
             <div class="col-md-2">
@@ -72,27 +68,30 @@
                     <% categories.forEach(element => { %>
                         <div class="form-check">
                             <input class="form-check-input"
-                            type="checkbox"
-                            id="category_<%= element.id %>"
-                            name=""
+                                type="checkbox"
+                                id="category_<%= element.id %>" 
+                                name="categories[]"
+                                value="<%= element.id %>"
                                 <%= blog.categories.some(cat => cat.id == element.id ) ? "checked" : " " %>
                             />
 
-                            <label class="form-check-label" for="category_<%= element.id %>">
-                                <%= element.name %>
-                            </label>
-                          </div>
-                    <% }) %>
-
+                         <label class="form-check-label" for="category_<%= element.id %>">
+                             <%= element.name %>
+                         </label>
                     </div>
-                
+                <% }) %>
             </div>
         </div>
     </div>
+</form>
+</div>
+
+
+
+
 
 
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"> </script>
-
     <script>
         // bu kısımları full CK editor sayfasından kopyalıyoruz. Ztn kendisi bizim için herşeyi yazmış.
 
