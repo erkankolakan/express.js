@@ -9,79 +9,40 @@
 
     <div class="container mt-3 ">
         <div class="row">
-            <div class="col-md-12 mt-3">
+            <div class="col-md-10 ">
 <!-- yine bir data taşıyacağımız için forma enctype="multipart/form-data" yazıyoruz. Kısacasıı hangi sayfada data taşıyorsak özelliği eklememiz gerekir. -->
                 <form method="post"   enctype="multipart/form-data" > 
 <!-- eski resmi tutmamız için oldukça önemlidir -->
                     <input type="hidden" name="resim" value="<%= blog.resim %>">  
                     <input type="hidden" name="blogid" value="<%= blog.id %>">
                     <div class="row mb-3"> 
-                        <label for="baslik" class="col-sm-2 col-form-label">Başlık</label>
-                        <div class="col-sm-8">
+                        <label for="baslik" class="col-sm-1 col-form-label">Başlık</label>
+                        <div class="col-sm-11">
                             <input type="text" class="form-control" id="baslik" name="baslik" value="<%= blog.baslik %>">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="altbaslik" class="col-sm-2 col-form-label">Alt Başlık</label>
-                        <div class="col-sm-8">
+                        <label for="altbaslik" class="col-sm-1 col-form-label">Alt Başlık</label>
+                        <div class="col-sm-11">
                             <textarea class="form-control" name="altbaslik" rows="5"><%= blog.altbaslik %></textarea>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="aciklama" class="col-sm-2 col-form-label">Açıklama</label>
-                        <div class="col-sm-8">
+                        <label for="aciklama" class="col-sm-1 col-form-label">Açıklama</label>
+                        <div class="col-sm-11">
                             <textarea id="editor" class="form-control" name="aciklama" rows="10" > <%= blog.aciklama %> </textarea>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="resim" class="col-sm-2 col-form-label">Resim</label>
-                        <div class="col-sm-8">
+                        <label for="resim" class="col-sm-1 col-form-label">Resim</label>
+                        <div class="col-sm-11">
                             <img src="/static/images/<%= blog.resim %>" width="200px"  alt="">
                             <input type="file" class="form-control" id="resim" name="resim">
                         </div>
                     </div>
-
-
-    <div class="row mb-3">
-        <label for="kategori" class="col-sm-2 col-form-label">Kategori</label>
-        <div class="col-sm-8">
-            <select name="kategori" id="kategori" class="form-select">
-                <option value="-1">Kategori Seçiniz</option>
-                    <% categories.forEach(category => { %>
-                        <option value="<%= category.dataValues.id %>" selected ><%= category.dataValues.name %></option>
-                    <% }) %>
-            </select>
-
-            <script>
-                document.querySelector("#kategori").value = "<%= blog.id %>"
-            </script>
-    </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-sm-8 offset-sm-2">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="anasayfa" name="anasayfa" <%= blog.anasayfa?"checked":"" %>/> 
-            <label class="form-check-label" for="anasayfa">
-                Anasayfa
-            </label>
-          </div>
-        </div>
-      </div>
-
-    <div class="row mb-3">
-        <div class="col-sm-8 offset-sm-2">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="onay" name="onay" <%= blog.onay?"checked":"" %>/>
-            <label class="form-check-label" for="onay">
-                Onay
-            </label>
-          </div>
-        </div>
-    </div>
 
 
         <div class="row mb-3">
@@ -90,8 +51,41 @@
             </div>
         </div>
 
-</form>
+                </form>
 
+             
+            </div>
+            
+            <div class="col-md-2">
+                    
+                <div class="row mb-3 ">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="anasayfa" name="anasayfa" <%= blog.anasayfa?"checked":"" %>/> 
+                        <label class="form-check-label" for="anasayfa">
+                            Anasayfa
+                        </label>
+                      </div>
+                  </div>
+            
+                <div class="row border-top pt-3 ">
+
+                    <% categories.forEach(element => { %>
+                        <div class="form-check">
+                            <input class="form-check-input"
+                            type="checkbox"
+                            id="category_<%= element.id %>"
+                            name=""
+                                <%= blog.categories.some(cat => cat.id == element.id ) ? "checked" : " " %>
+                            />
+<!-- kullanıcının daha önceden seçmiş olduğu kategorileri işaretleyebilmemiz için biz gönderdiğimiz blog üzerinden ona ilişkin kategori bilgilerinin id değerini isteyerek erişiyoruz. Aynı zamanda biz bu sayfaya databasedeki tüm kategori bilgilerini categories olarak gönderiyoruz ve some ile ki some bize true veya false değer döndürür. Biz gelen tüm categories bilgilerini geziyoruz ve eğer gezerken eski bilgiye esişt bir değer görürsek o cheack box ı checked ediyoruz. -->
+                            <label class="form-check-label" for="category_<%= element.id %>">
+                                <%= element.name %>
+                            </label>
+                          </div>
+                    <% }) %>
+
+                    </div>
+                
             </div>
         </div>
     </div>
