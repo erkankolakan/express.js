@@ -263,7 +263,7 @@ exports.get_blogs =  async(req ,res) => {
                 model:Category
             }
         }) 
-
+        console.log(blogs.categories);
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,
