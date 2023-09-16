@@ -113,11 +113,3 @@ exports.index = async(req ,res) => {
 } 
 
 
-
-/*
-    CONTROLLER
-controller mantığı aslında mvc(model) denen mantık var ki biz zaten model mantığını öğrendik. views bizim için ejs sayfalarıdır yani görüntü oluşturacak.
-controller ise bizim için süreci yürütecek olan örneğin veri tabanına bağlanıp buradan bilgileri alıp ki bu bilgileri de belirli nesneler aracılığla  model içine doldurarak bunu sayfa üzerinde viewlere göndererek bir görüntü oluşturuyoruz. 
-Biz aslında routes klasörü oluşturduk ve router içinde istekler geliyor ve bu istekler sonucunda bir fonksiyon döndürüyoruz. Bizim aslında bu fonksiyonları controller içinde tutmamız gerekir.
-
-*/

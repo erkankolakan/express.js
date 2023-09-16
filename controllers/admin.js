@@ -258,9 +258,9 @@ exports.get_blogs =  async(req ,res) => {
     try {
         const blogs = await Blog.findAll({   
             attributes:["id", "baslik", "altbaslik", "resim"],
-            include: {                               //burada dikkat etmemiz gereken konu iki tarafdan da çok kayıt aldığımızdan dolayı
-                model:Category,     //blogları seçiyoruz bloglara karşılık gelen bilgi include ettiğimiz zaman Category objesi olarak tek
-                attributes:["name"] //bir kayıt değil Categors olarak geliyor yani çoğulu geliyor aynı şekilde categori üzerinden ilerlediğimiz zamanda da bize tek bir blog değil Blogs geliyor yani onunda çoğulu. 
+            include: {             
+                model:Category,    
+                attributes:["name"]
             }
         }) 
         console.log(blogs.categories);

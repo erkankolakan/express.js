@@ -7,8 +7,7 @@ const Blog = require("../models/blog")
 
     if (count == 0) {
     
-// İlk önce Catgory tablosuna eklediğimiz kategorilerin listesini uygulma tarafında bir değişkende tutacağım.
-// iki tablo arasında bir liste alarak bu bilgiler üzerinden 3. tablomuza bir ekleme işlemi yapacağız.  
+
         const categories = await Category.bulkCreate([ 
             {name:"Web Geliştirme"},
             {name:"Mobil Uygulama Geliştirme"},
@@ -52,18 +51,13 @@ const Blog = require("../models/blog")
         )
 
         await categories[0].addBlog(blogs[0]);
-    //-> Var olan bir kategori bilgsine var olan bir blog bilsini eklemiş olsuk.( Yeni bir tane blog eklemiyoruz !!! ) 
-    // 1 numaralı kartagoriye 1 numaralı blog insert edildi bağlandı
 
         await blogs[0].addCategory(categories[1]);
-    //burada da tam tersinden bakıyoruz olaya 
-    // 1. blog bilgisine 2. kategori bilgisini bağlamış oldum. -> türkçe meali 1. blog 2. kategoriye bağlı demiş olduk.
-
 
     await categories[1].addBlog(blogs[2]);
     await categories[0].addBlog(blogs[1]);
-    await categories[2].addBlog(blogs[3]); // burada aslında bir kategori birden fazla blog, bir blog da birden fazla kategoriye 
-    await categories[0].addBlog(blogs[2]); // atanabileceğini göstermiş oluyoruz.
+    await categories[2].addBlog(blogs[3]);
+    await categories[0].addBlog(blogs[2]);
 
 
     await categories[2].createBlog({
@@ -74,6 +68,5 @@ const Blog = require("../models/blog")
         anasayfa:true,
         onay:true,
     })
-    //bu kısımda hem yeni bir blog eklemiş olduk hemde bloğu eklediğimiz gibi bir tane kategoriye bağlamış olduk.
 }}
     module.exports = populate;
