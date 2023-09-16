@@ -56,7 +56,6 @@
                             <td>
                                 <a class="btn btn-sm btn-primary" href="/admin/blog/<%= element.dataValues.id %>">düzenle</a>
 
-<!-- silme butonunu form içine aldık çünkü biz bunu post ettiğimiz zaman serverde bulunan bir methoda bunu yönlendireceğim ve bu method ilgili gelen datalarla birlikte İLİŞKİ silme işlemini gerçekleştirecek -->
                                 <form style="display: inline-block;" action="/admin/categories/remove" method="post">
                                     <input type="hidden" name="blogid" value="<%= element.id %>">
                                     <input type="hidden" name="categoryid" value="<%= category.id %>">

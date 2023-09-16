@@ -263,9 +263,6 @@ exports.get_category_remove = async(req , res) => {
 
     await sequelize.query(`delete from blogcategories where blogId=${blogid} and categoryId=${categoryid}`)
 
-    //bu bir sequelize ile SQL sorgusu normal şekilde diğer komutları kullanılarak da bu işlemler yapılabilir.
-
-    //bu sorguda 3. tabloda (eşleşme tablosunda) blogId değeri HTML sayfasından gelen blogid değerine eşit olan ve 3. tablodaki categoryId değeri HTML sayfasından gelen categoryid değerine eşit olanların ilişkisini sil demiş oluyoruz.
 
     res.redirect("/admin/categories/" + categoryid)
 }
