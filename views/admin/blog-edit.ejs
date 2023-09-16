@@ -77,7 +77,7 @@
                             name=""
                                 <%= blog.categories.some(cat => cat.id == element.id ) ? "checked" : " " %>
                             />
-<!-- kullanıcının daha önceden seçmiş olduğu kategorileri işaretleyebilmemiz için biz gönderdiğimiz blog üzerinden ona ilişkin kategori bilgilerinin id değerini isteyerek erişiyoruz. Aynı zamanda biz bu sayfaya databasedeki tüm kategori bilgilerini categories olarak gönderiyoruz ve some ile ki some bize true veya false değer döndürür. Biz gelen tüm categories bilgilerini geziyoruz ve eğer gezerken eski bilgiye esişt bir değer görürsek o cheack box ı checked ediyoruz. -->
+
                             <label class="form-check-label" for="category_<%= element.id %>">
                                 <%= element.name %>
                             </label>

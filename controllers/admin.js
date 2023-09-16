@@ -149,19 +149,13 @@ exports.get_blog_edit = async(req ,res) => {
 
         const blog = await Blog.findOne({
             where:{
-                id : blogid             //tıkladığımın id değeri url ye gider url denen gelen değere eşit olan blogu getir demiş oluruz.
+                id : blogid            
             },
             include:{
                 model:Category,
-                attributes:["id"] //-> Id değerini almamız yeterli sonuçta biz kullanıcının seçmiş olduğu blogun daha önceden eklenmiş olan kategorilerin sadede id değerini almamız bizim için yeterli olacaktır. 
+                attributes:["id"] 
             }
         })
-console.log(blog);
-
-/* Include, bu blog gönderisinin ilişkilendirildiği kategori bilgisini de almayı amaçlar. Yani, bu blogun hangi kategoriye ait olduğunu da sorgu sonucunda almak istiyoruz. 
-model özelliği, bu ilişkili verinin hangi modelle ilişkilendirildiğini belirtir. Burada, "Category" modelini belirtiyoruz çünkü blog gönderileri ile kategoriler arasında bir ilişki var.
-attributes özelliği, kategori verilerini sorgu sonucunda hangi sütunların alınacağını belirtir. Burada, sadece kategori "id" sütununu almayı tercih ediyoruz.
-*/
 
         const categories = await Category.findAll() //burada da veri tabanındaki tüm kategoriler.
 
