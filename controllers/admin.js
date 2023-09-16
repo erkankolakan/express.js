@@ -255,29 +255,15 @@ exports.post_category_edit = async(req ,res) => {
 
 exports.get_blogs =  async(req ,res) => {
 
-/*(include = katmak)*/  // bu şekilde tek seferde veri gönderme yede Eager Loading denir 
+
     try {
         const blogs = await Blog.findAll({   
             attributes:["id", "baslik", "altbaslik", "resim"],
             include: {
-                model:Category, //Category bizim üste çağırmış olduğumuz const Category = require("../models/category") den gelir.
-                attributes:["name"]  // bize normalde catgeornin tüm bilgileri gelir ama bu işimize yaramaz burada sadece name alanını kullancağım için sadece ihtiyacım olan ksımı bu şekilde çağırabilirim
+                model:Category
             }
         }) 
-/* 
-    include: Category // bu şekilde ekleme yaptığımız zaman Category deki tüm bilgileri getirir.
-*/
 
-/*
-    Biz bu sayde ne yapmış olduk Blogdaki -> id, baslik, altbaslik, resim bilgilerini aldık aynı zamanda onları alırken Category bilgilerinide aldık bu bilgiler bize aşağıdaki gibi gelir. Bu öyle bildiğimiz category değil ama çağırdığımız bloga ait category bilgisi gelmiş olur.
-         {
-             id,
-             baslik,
-             category:{
-                 name: "Web gelistime"  -->> !!!!!! blogun kategori ismi gelecektir !!!!!!
-             }
-         }
-*/
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,

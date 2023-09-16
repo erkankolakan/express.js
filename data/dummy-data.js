@@ -22,7 +22,6 @@ const Blog = require("../models/blog")
                 resim:"1.jpg",
                 anasayfa:true,
                 onay:true,
-                categoryId:1 
             },
             {
                 baslik:"Python ile Sıfırdan İleri Seviye Python Programlama",
@@ -31,7 +30,6 @@ const Blog = require("../models/blog")
                 resim:"2.jpg",
                 anasayfa:true,
                 onay:true,
-                categoryId:1
             },
             {
                 baslik:"Node.js ile Sıfırdan İleri Seviye Web Geliştirme",
@@ -40,7 +38,6 @@ const Blog = require("../models/blog")
                 resim:"3.jpg",
                 anasayfa:true,
                 onay:true,
-                categoryId:2
             },
             {
                 baslik:"Node.js ile Sıfırdan İleri Seviye Web Geliştirme",
@@ -49,7 +46,6 @@ const Blog = require("../models/blog")
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
-                categoryId:3
             },
         ]
     )

@@ -27,8 +27,10 @@ const Blog = sequelize.define("blog" , {
         type:DataTypes.BOOLEAN,
         allowNull:false
     }
-})
-
+},{
+    timestamps: true,   //tüm tablolarda biz timestamps (createAt, updateAt) değerini kapattık ama blogda görünsün istediğimiz için gelip burda özellikle açık olması gerektiğini söyledik
+}
+)
 
  module.exports = Blog;
 

@@ -7,8 +7,10 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize(config.db.database , config.db.user , config.db.password, {
         dialect:"mysql",
         host: config.db.host,
+        define:{
+            timestamps: false // createAt ve updateAt değerlerini tablolardan kaldırır. Ama bazı tablolarda timestamps değerilerinin gözükmesini istiyor olabiliriz o yüzden gidip o tablolara gidip timestamps:true şeklide yaralayabiliriz
+        }
     });
-
 
     const baglantitesti = async() => {
         try {
