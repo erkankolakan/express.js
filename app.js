@@ -22,13 +22,10 @@ app.use("/static", express.static(path.join(__dirname,"public")))
 
 
     // Many to Many
-
-    Blog.belongsToMany(Category , {through: "blogCategories"});  //burada noktalı virgüller nesensizce çok önemli
+    Blog.belongsToMany(Category , {through: "blogCategories"});  
     Category.belongsToMany(Blog , {through: "blogCategories"});
-//burada yazmış olduğumuz aslında çok basit
-//Blog birden fazla category e sahip olabilir 3. tablo ismi blogCategories dir.
-//Categoy birden fazla blog a sahip olabilir 3. tablo ismi blogCategories dir. 
-//İki tablonun ilişkisi blogCategories tablosunda tutulacaktır
+
+
 
 (async () => {
     await sequelize.sync();
