@@ -24,8 +24,9 @@ router.get( "/blog/:blogid",  adminController.get_blog_edit)
 
 router.post( "/blog/:blogid", imageUpload.upload.single("resim") , adminController.post_blog_edit )
 
-router.get( "/categories/:categoryid", adminController.get_category_edit)
+router.post("/categories/remove", adminController.get_category_remove)  
 
+router.get( "/categories/:categoryid", adminController.get_category_edit)
 
 router.post( "/categories/:categoryid", adminController.post_category_edit)
 

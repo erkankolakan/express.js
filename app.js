@@ -28,7 +28,7 @@ app.use("/static", express.static(path.join(__dirname,"public")))
 
 
 (async () => {
-    await sequelize.sync({alter: true});
+    await sequelize.sync({force: true});
     await dummyData()
 })();
 

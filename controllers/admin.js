@@ -2,6 +2,7 @@ const Blog = require("../models/blog")
 const Category = require("../models/category")
 const fs = require("fs")
 const {Op} = require("sequelize")  
+const sequelize = require("../data/db")
 
 
 exports.get_blog_delete = async(req, res) =>{
@@ -253,6 +254,21 @@ exports.post_blog_edit = async(req ,res) => {
         console.log(error);
     }
 } 
+
+
+exports.get_category_remove = async(req , res) => {
+
+    const blogid = req.body.blogid;
+    const categoryid = req.body.categoryid;
+
+    await sequelize.query(`delete from blogcategories where blogId=${blogid} and categoryId=${categoryid}`)
+
+    //bu bir sequelize ile SQL sorgusu normal şekilde diğer komutları kullanılarak da bu işlemler yapılabilir.
+
+    //bu sorguda 3. tabloda (eşleşme tablosunda) blogId değeri HTML sayfasından gelen blogid değerine eşit olan ve 3. tablodaki categoryId değeri HTML sayfasından gelen categoryid değerine eşit olanların ilişkisini sil demiş oluyoruz.
+
+    res.redirect("/admin/categories/" + categoryid)
+}
 
 exports.get_category_edit = async(req ,res) => { 
 
