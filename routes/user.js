@@ -6,13 +6,13 @@ const router = express.Router();
 const userController = require("../controllers/user.js")
 
 
-router.use("/blogs/category/:slug" , userController.bogs_by_category)  //controllerdeki fonksiyonu buraya çağırmış olduk
+router.get("/blogs/category/:slug" , userController.blog_list)  //controllerdeki fonksiyonu buraya çağırmış olduk
 
-router.use( "/blogs/:slug", userController.blogs_details)
+router.get( "/blogs/:slug", userController.blogs_details)
 
-router.use( "/blogs", userController.blog_list)
+router.get( "/blogs", userController.blog_list)
 
-router.use( "/",  userController.index)
+router.get( "/",  userController.index)
 
 module.exports= router
 

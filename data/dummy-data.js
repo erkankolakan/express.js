@@ -45,7 +45,7 @@ const slugiField = require("../helpers/slugfield")
                 onay:true,
             },
             {
-                baslik:"Node.js ile Sıfırdan İleri Seviye Web Geliştirme",
+                baslik:"66666666666666666666666666666666666666666666",
                 url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
                 altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
                 aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
@@ -53,16 +53,104 @@ const slugiField = require("../helpers/slugfield")
                 anasayfa:true,
                 onay:true,
             },
+            {
+                baslik:"555555555555555555555555555555555555555",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"44444444444444444444444444444444444444",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"333333333333333333333333333333333",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"222222222222222222222222222222222",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"111111111111111111111111111111111111111111",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"cccccccccccccccccccccccccccccccce",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"ssssssssssssssssssssssssssssss",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            },
+            {
+                baslik:"aaaaaaaaaaaaaaaaaaaaaaaaa",
+                url:slugiField("Node.js ile Sıfırdan İleri Seviye Web Geliştirme"),
+                altbaslik:"Node.js ile sıfırdan ileri seviye dinamik web uygulaması geliştirmeyi öğren.",
+                aciklama:"En popüler programlama dili olan Javascript programlama dilini artık Node.js sayesinde server tabanlı bir dil olarak kullanabilirsin Kurs sonunda sadece Javascript programlama dilini kullanarak Fullstack bir web geliştirici olmak istiyorsan hemen kursa katılmalısın!",
+                resim:"4.jpg",
+                anasayfa:true,
+                onay:true,
+            }
         ])
 
         await categories[0].addBlog(blogs[0]);
 
         await blogs[0].addCategory(categories[1]);
-
+    await categories[0].addBlog(blogs[2]);
+    await categories[0].addBlog(blogs[3]);
+    await categories[0].addBlog(blogs[4]);
+    await categories[0].addBlog(blogs[5]);
+    await categories[0].addBlog(blogs[6]);
+    await categories[0].addBlog(blogs[7]);
+    await categories[0].addBlog(blogs[8]);
+    await categories[0].addBlog(blogs[9]);
+    await categories[0].addBlog(blogs[10]);
     await categories[1].addBlog(blogs[2]);
     await categories[0].addBlog(blogs[1]);
     await categories[2].addBlog(blogs[3]);
-    await categories[0].addBlog(blogs[2]);
 
 
     // await categories[2].createBlog({
