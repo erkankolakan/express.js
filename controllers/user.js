@@ -35,7 +35,7 @@ exports.blog_list = async(req ,res) => {
     
     try{
         
-        const blogs = await Blog.findAll({
+        const { rows , count } = await Blog.findAndCountAll({
             where:{ onay:{ [Op.eq]: true } },
             include: slug ? {model: Category , where:{ url:slug }} : null , 
             raw:true,
@@ -47,7 +47,10 @@ exports.blog_list = async(req ,res) => {
 
         res.render("users/blogs" , {
             title:"Tüm Kurslar",
-            blogs:blogs, 
+            blogs:rows, 
+            totalItems: count, //koşulumuza uyan, getirilen değer sayılarının hepsi.
+            totalPages: Math.ceil(count / size), //toplam gelen değer / bizim sayfaya göstediğimiz değer.
+            currentPage: page, //o anda hangi sayfa göteriliyor. buda zaten url de query ile var.
             categories: categories,
             secilenCategory:slug,
         })
@@ -90,4 +93,6 @@ exports.index = async(req ,res) => {
     
 } 
 
+
+/* findAndCountAll --> Bize blog bilgilerini getiriyor birde bunun yanında bize count isminde bir property döndürerek kaç tane kayıt olduğunu söyler. bize 5 tane değer döndürüyor ama koşulumuza uyan, bize getirdiği değerleri de bize count aracılığı ile söyliyicek. Bize bu bilgiyi döndürürken rows ve count parametrelerini döndürür.   */
 
