@@ -6,8 +6,7 @@ const {Op} = require("sequelize")
 
 
 exports.bogs_by_category = async (req , res) => {     //fonksiyonları dışarıya açmayı untutmamak gerek bu kısımda module.exports demeye gerek yok
-    const id = req.params.categoryid 
-
+    const slug = req.params.slug 
     try {
 
         const blogs = await Blog.findAll({
@@ -16,7 +15,7 @@ exports.bogs_by_category = async (req , res) => {     //fonksiyonları dışarı
             },
             include:{
                     model: Category,
-                    where:{id:id}
+                    where:{url:slug}
                 },
             raw:true 
         })
@@ -26,7 +25,7 @@ exports.bogs_by_category = async (req , res) => {     //fonksiyonları dışarı
             title:"Tüm Kurslar",
             blogs:blogs, 
             categories:categories,
-            secilenCategory:id, 
+            secilenCategory:slug,    
         })
         
     } catch (error) {
@@ -36,10 +35,14 @@ exports.bogs_by_category = async (req , res) => {     //fonksiyonları dışarı
 
 exports.blogs_details = async(req ,res) => {
 
-    const id = req.params.blogid 
+    const slug = req.params.slug 
 
     try {
-        const blog = await Blog.findByPk(id)  
+        const blog = await Blog.findOne({
+            where:{
+                url:slug
+            }
+        })  
       
         if (blog) { 
             return res.render("users/blogDetails" , {

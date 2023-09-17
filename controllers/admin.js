@@ -4,6 +4,8 @@ const fs = require("fs")
 const {Op} = require("sequelize")  
 const sequelize = require("../data/db")
 
+const slugField = require("../helpers/slugfield")
+
 
 exports.get_blog_delete = async(req, res) =>{
 
@@ -98,7 +100,6 @@ exports.post_blog_create = async (req, res) => {
     const altbaslik = req.body.altbaslik;
     const aciklama = req.body.aciklama;
     const resim = req.file.filename; 
-    const kategori = req.body.kategori; 
     const anasayfa = req.body.anasayfa == "on" ? 1:0 ; 
     const onay = req.body.onay == "on" ? 1:0 ;
 
@@ -107,11 +108,11 @@ exports.post_blog_create = async (req, res) => {
         await Blog.create({
             baslik:baslik,
             altbaslik:altbaslik,
+            url: slugField(baslik), //bu sayede gelen baslık değeri slugField içerisinden geçerek bir url olarak veri tabanında url satırana kaydolur
             aciklama:aciklama,
             resim:resim,
             anasayfa:anasayfa,
-            onay:onay,
-            categoryId:kategori
+            onay:onay
         }) 
         res.redirect("/admin/blogs?action=create"); 
 
@@ -185,6 +186,7 @@ exports.post_blog_edit = async(req ,res) => {
     const altbaslik = req.body.altbaslik;
     const baslik = req.body.baslik; 
     const aciklama = req.body.aciklama; 
+    const url = req.body.url;
     const kategoriIds = req.body.categories;
     let resim = req.body.resim;
     console.log(kategoriIds , "xxxxxxxxxxxxxxxxxxxx");
@@ -225,6 +227,7 @@ exports.post_blog_edit = async(req ,res) => {
                     resim : resim,
                     anasayfa : anasayfa,
                     onay : onay,
+                    url: url,
             });
 
                 if (kategoriIds == undefined) {  
