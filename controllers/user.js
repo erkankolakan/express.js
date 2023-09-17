@@ -29,20 +29,17 @@ exports.blogs_details = async(req ,res) => {
 }
 
 exports.blog_list = async(req ,res) => {
-    const size = 5 // sayfa başı gelecek ürün sayısı. 
-    const { page = 0 } = req.query;   // ben urleye bir parametre ekleyerek page=x vererek hangi sayfada olduğunu alacağım. { page = 0 } diyerek req.query den gelen değer page ye set edilir ama kullanıcı bir değer girmediyse default olarak 0 değerni alır yani birinci sayfa değerini alır
+    const size = 5 
+    const { page = 0 } = req.query;   
     const slug = req.params.slug
     
     try{
         
         const blogs = await Blog.findAll({
             where:{ onay:{ [Op.eq]: true } },
-            include: slug ? {model: Category , where:{ url:slug }} : null , //-> include demek kategori olduğu zaman gelecek demek. slug gelmemişse undefinedir, eğer slug gelmemişse undefined değildir bir değer vardır. 
+            include: slug ? {model: Category , where:{ url:slug }} : null , 
             raw:true,
-            // findAll biizm için bu özellikleri sağlıyor zaten.
-            limit:size,  //-> gelecek olan ürün limiti 5 tane ürün gelecek.
-        // offset:5 // -> offset:5 diyerek diğer 5 ürünü almasını söylüyorum.İlk beşi değil ikinci 5 i al demiş oluyoruz offset burada ötelemek demek. 
-        
+            limit:size,  
             offset: page * size //--->  0*5 => 0    1*5 => 5  (sonraki 5 taneyi all)
 
         })
