@@ -14,7 +14,7 @@ app.use("/static", express.static(path.join(__dirname,"public")))
 
     app.use("/admin",adminRoutes); 
     
-    app.use("/account", authRoutes);  //routerı burda çağırıyoruz. her çağırdığımız linkişn basşına /account ekler.
+    app.use("/account", authRoutes);  
     
     app.use(userRoutes); 
 

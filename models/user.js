@@ -5,7 +5,7 @@ const  sequelize  = require("../data/db");
 const  DataTypes  = require("sequelize");
 
 
-const User = sequelize.define("user" ,{  //tablomuzun ismi user
+const User = sequelize.define("user" ,{  
 
     fullname:{
         type: DataTypes.STRING,
