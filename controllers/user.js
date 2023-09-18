@@ -40,17 +40,16 @@ exports.blog_list = async(req ,res) => {
             include: slug ? {model: Category , where:{ url:slug }} : null , 
             raw:true,
             limit:size,  
-            offset: page * size //--->  0*5 => 0    1*5 => 5  (sonraki 5 taneyi all)
-
+            offset: page * size 
         })
         const categories = await Category.findAll({raw:true})
 
         res.render("users/blogs" , {
             title:"Tüm Kurslar",
             blogs:rows, 
-            totalItems: count, //koşulumuza uyan, getirilen değer sayılarının hepsi.
-            totalPages: Math.ceil(count / size), //toplam gelen değer / bizim sayfaya göstediğimiz değer.
-            currentPage: page, //o anda hangi sayfa göteriliyor. buda zaten url de query ile var.
+            totalItems: count,
+            totalPages: Math.ceil(count / size), 
+            currentPage: page,
             categories: categories,
             secilenCategory:slug,
         })
@@ -64,7 +63,6 @@ exports.blog_list = async(req ,res) => {
 
 exports.index = async(req ,res) => {
 
-    //yukarıda const {Op} = requir("sequelize") dedikten sonra operatorleri kullabiliriz
     
         try{
             
@@ -76,7 +74,7 @@ exports.index = async(req ,res) => {
                 ]},
                 raw:true
             })
-            const categories = await Category.findAll({raw: true}) //raw true dediğimiz zaman extra gelen saçma bilgiler gelmez.
+            const categories = await Category.findAll({raw: true})
     
     
             
@@ -94,5 +92,4 @@ exports.index = async(req ,res) => {
 } 
 
 
-/* findAndCountAll --> Bize blog bilgilerini getiriyor birde bunun yanında bize count isminde bir property döndürerek kaç tane kayıt olduğunu söyler. bize 5 tane değer döndürüyor ama koşulumuza uyan, bize getirdiği değerleri de bize count aracılığı ile söyliyicek. Bize bu bilgiyi döndürürken rows ve count parametrelerini döndürür.   */
 
