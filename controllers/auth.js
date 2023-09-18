@@ -2,6 +2,8 @@
 
 const User = require("../models/user");  //user tablosu
 
+const bcrypt = require('bcrypt');
+
 exports.get_register = async(req , res) => {
     try {
         return res.render("auth/register" , {
@@ -17,12 +19,15 @@ exports.post_register = async(req , res) =>{
     const email = req.body.email;
     const password = req.body.password;
 
+    const hashedPassword = await bcrypt.hash(password,10)
+    /* ilk parametre neyi hasleyeceği ikincisi ise şifrenin zorluk seviyesi */
+
     try {
         
         await User.create({
             fullname:name,
             email: email,
-            password: password
+            password: hashedPassword
         })
 
         return res.redirect("login")
