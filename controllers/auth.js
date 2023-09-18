@@ -38,7 +38,6 @@ exports.post_register = async(req , res) =>{
 
 }
 
-
 exports.get_login = async(req , res) => {
     try {
         return res.render("auth/login" , {
@@ -53,13 +52,11 @@ exports.post_login = async(req , res) =>{
     const email = req.body.email;
     const password = req.body.password;
 
-    //user tablosunda bir kayıt var mı yok mu diye bir kontrol sağlıyoruz
-
     try {
 
         const user = await User.findOne({
             where:{
-                email:email  //suer tablosundaki email ile girilen email aynımı
+                email:email 
             }
         })
 
@@ -70,13 +67,10 @@ exports.post_login = async(req , res) =>{
             })
         }
 
-        /*Burada normalde if yazılır ama buna gerek ama biz bir üst satırda kullancı gelmezse yoksa dedik ve içinde retun var fonksiyon retunu okuduğu anda alt satırları okumaz break komutu gibi aslında. Okumazsa sıkıntı yok zaten. */
-
         const match = await bcrypt.compare(password , user.password)
-        //formdan girilan birinci parametre, veri tabanında hashlenmiş olarak bekleyen parametre. Compare diyerek şifrelenmiş parolayı çözer ve diğer ile karşılaştırır.   
 
 
-        if(match){ //kullanıcı login oldu onu ana sayfaya gönder diyebiliriz
+        if(match){ 
         return res.redirect("/") 
         }
 
