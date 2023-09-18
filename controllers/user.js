@@ -63,6 +63,7 @@ exports.blog_list = async(req ,res) => {
 
 exports.index = async(req ,res) => {
 
+    console.log(req.cookies)
     
         try{
             
@@ -75,14 +76,13 @@ exports.index = async(req ,res) => {
                 raw:true
             })
             const categories = await Category.findAll({raw: true})
-    
-    
             
             res.render("users/index" , {
                 title:"Tüm Kurslar",
                 blogs:blogs, 
                 categories:categories,
-                secilenCategory:null
+                secilenCategory:null,
+                isAuth: req.cookies.isAuth //cookiden gelen kullanıcı giriş yapmış mı yapmamışmı bilgisi
             })
         }
         catch(err){

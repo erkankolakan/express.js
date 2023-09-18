@@ -1,25 +1,54 @@
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
     <div class="container"> 
         <a href="/" class="navbar-brand">Blogapp</a>
+
         <ul class="navbar-nav me-auto">
-            <li class="nav-item"> 
-                <a href="/blogs" class="nav-link">Blog listesi</a>
-            </li>
-            <li class="nav-item"> 
-                <a href="/admin/blogs" class="nav-link">Admin Blogs</a>
-            </li>
-            <li class="nav-item"> 
-                <a href="/admin/categories" class="nav-link">Admin Katagori</a>
-            </li>
-            <li class="nav-item"> 
-                <a href="/admin/blog/create" class="nav-link">Blog Ekle</a>
-            </li>
-            <li class="nav-item"> 
-                <a href="/admin/category/create" class="nav-link">Kategori Ekle</a>
-            </li>
-            
+
+                <li class="nav-item"> 
+                    <a href="/blogs" class="nav-link">Blog listesi</a>
+                </li>
+
+            <% if (typeof isAuth != "undefined" && isAuth == "1") { %>
+                <li class="nav-item"> 
+                    <a href="/admin/blogs" class="nav-link">Admin Blogs</a>
+                </li>
+                <li class="nav-item"> 
+                    <a href="/admin/categories" class="nav-link">Admin Katagori</a>
+                </li>
+                <li class="nav-item"> 
+                    <a href="/admin/blog/create" class="nav-link">Blog Ekle</a>
+                </li>
+                <li class="nav-item"> 
+                    <a href="/admin/category/create" class="nav-link">Kategori Ekle</a>
+                </li>
+            <% } %>
+
         </ul>
+
+        <ul class="navbar-nav ms-auto">
+
+            <% if (typeof isAuth != "undefined" && isAuth == "1") { %>
+
+                <li class="nav-item">
+                    <a href="/account/logout" class="nav-link">Logout</a>
+                </li>
+
+                <% } else { %>
+
+                <li class="nav-item">
+                    <a href="/account/login" class="nav-link">Login</a>
+                </li>
+    
+                <li class="nav-item">
+                    <a href="/account/register" class="nav-link">Register</a>
+                </li>
+                 
+            <% } %>
+        </ul>
+
     </div>
 </nav>
 
-<!-- admin/category/create yaparsak olan url nin üstüne bu değeri yazdırır , /admin/category/create yazarsak olan url siliri direk /admin/category/create olmuş olur -->
+<!--  Kullanıcı giriş yapmışsa isAuth=1 bilgisi cookiesde durur. Bizde index js de cookies bilgisini alıyoruz ve buraya gönderiyoruz. Eğer kullanıcı girmişse admin panelini ona göstereceğiz.  -->
+
+<!-- Tabiki burada linki kapatmak kullanıcının bu sayfaya erişimini engellemez bunu controller içersinde de tanımlamak gerekiyor. Yani gelen requestin içindeki cookieyi kontol ederek sayfanın kullanıcıya getirilip getirlmediğini tanımlamak gerek. Yani olay sadece linkin gösterilip gösterilmemesi değil.  -->

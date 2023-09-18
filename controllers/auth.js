@@ -47,6 +47,18 @@ exports.get_login = async(req , res) => {
         console.log(error);
     }
 }
+
+exports.get_logout = async(req , res) => {
+    try {
+        res.clearCookie("isAuth") //key ismini veriyoruz ve bunu siliyor.Buna tıkladığım anda kullanıcının tarayıcısında tanımlı olan cookie silinir
+
+        return res.redirect("/account/login")
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 exports.post_login = async(req , res) =>{
 
     const email = req.body.email;
@@ -71,6 +83,9 @@ exports.post_login = async(req , res) =>{
 
 
         if(match){ 
+        //response bizim uygulmamamıza bir qookie gönderecek
+        //İlk parametre key değeri ikinci value değeri, 0 başarısız giriş 1 başarılı giriş istersen bdeğerlerde verebilirsin.
+        res.cookie("isAuth" , 1)  
         return res.redirect("/") 
         }
 
@@ -82,6 +97,14 @@ exports.post_login = async(req , res) =>{
     } catch (error) {
         console.log(error);
     }
+  }
 
-}
+/*
+    Cookies 
+kullanıcı başarılı bir şekilde giriş yaptıysa giriş bilgilerini tekrar tekrar kullanıcıdan almak yerine cookie login olma durumunu biyerde depolamak gerekiyor. Bunlardan biri COOKİE ancak cookie güvenlik açısından kullanılmaması gereken bir yöntem.
+Cookie kullanıcının tarayıcısında bir bilgi saklamak istediğimiz zaman kullanıyoruz. Örneğin uygulamamızı kullanan kullanıcı arama yapmıştır ve bu arama sonucunda aslında biz o kullanıcının hangi ürünlerle ilgilendiğini biliriz ve daha sonra geldiğinde de daha önde çıkararak kullanıcının bunu ürünü almasını sağlayabiliriz.  
+
+NODE.JS uygulamasında cooki yüklü olarak gelmiyor, bu bir npm paketi ve ve bunu kullanmak istediğimiz zaman bunu kurmamız gerekiyor. 
+
+*/
 

@@ -4,6 +4,9 @@ const path = require("path")
 const userRoutes = require("./routes/user") 
 const adminRoutes = require("./routes/admin")
 const authRoutes = require("./routes/auth")
+const cookieParser = require("cookie-parser")
+
+app.use(cookieParser())
 
 app.use(express.urlencoded())
 
