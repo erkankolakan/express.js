@@ -3,6 +3,7 @@ const app = express();
 const path = require("path") 
 const userRoutes = require("./routes/user") 
 const adminRoutes = require("./routes/admin")
+const authRoutes = require("./routes/auth")
 
 app.use(express.urlencoded())
 
@@ -12,6 +13,9 @@ app.use("/libs" , express.static(path.join(__dirname,"node_modules")))
 app.use("/static", express.static(path.join(__dirname,"public")))    
 
     app.use("/admin",adminRoutes); 
+    
+    app.use("/account", authRoutes);  //routerı burda çağırıyoruz. her çağırdığımız linkişn basşına /account ekler.
+    
     app.use(userRoutes); 
 
     const sequelize = require("./data/db") 
