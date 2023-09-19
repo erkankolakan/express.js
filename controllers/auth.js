@@ -81,10 +81,10 @@ exports.post_login = async(req , res) =>{
         const match = await bcrypt.compare(password , user.password)
 
         if(match){ 
-    
         req.session.isAuth=true;
         req.session.fullname= user.fullname
-        return res.redirect("/") 
+        const url = req.query.returnUrl || "/"
+        return res.redirect(url) 
         }
 
         return res.render("auth/login", {
