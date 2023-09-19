@@ -80,12 +80,9 @@ exports.post_login = async(req , res) =>{
 
         const match = await bcrypt.compare(password , user.password)
 
-        //cookie res üzerinden erişiyorduk. SESSİON da ise req üzerinden yazdırıyoruz.
-
         if(match){ 
-        //response bizim uygulmamamıza bir qookie gönderecek
-        //İlk parametre key değeri ikinci value değeri, 0 başarısız giriş 1 başarılı giriş istersen bdeğerlerde verebilirsin.
-        req.session.isAuth=1    //biz bu aşamada bir session oluşturmuş oluyoruz. isAuth keyine ait 1 valude değerine sahip bir session
+    
+        req.session.isAuth=1   
         return res.redirect("/") 
         }
 
