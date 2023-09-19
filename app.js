@@ -36,15 +36,13 @@ app.use(session({
     resave: true, 
     saveUninitialized: false, 
     cookie:{ 
-        maxAge: 1000*60*60*24         // dosya hiyerarşisi önemlidir üstde yazmış olsak hata alırdık 
+        maxAge: 1000*60*60*24       
     },
     store: new SequelizeStroe({
         db: sequelize
     })
 }));
-/*
-Artık oluşturulmuş olan session id nin karşılığı veri tabanında. Yani ben serverı durdurşmuş olsam bile uygulama içinde gezebilirim. Çünkü benim uygulama içinde gezebilmemi sağlayan izin bilgileri veri tabanında.
-*/ 
+
 
 
 app.use("/libs" , express.static(path.join(__dirname,"node_modules")))
