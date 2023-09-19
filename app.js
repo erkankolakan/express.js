@@ -4,9 +4,22 @@ const path = require("path")
 const userRoutes = require("./routes/user") 
 const adminRoutes = require("./routes/admin")
 const authRoutes = require("./routes/auth")
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser") //cookie
+const session = require("express-session") //session
 
-app.use(cookieParser())
+app.use(cookieParser())  //çağırdığımız değeri middle vare olarak çağırıyoruz.
+app.use(session({
+    secret:"0ade738c-2251-433f-8482-68ae2c6aa6b6", //section bilgisine ulaşırken bir key bilgisine ihtiyacımız var. Web de Random guid diye bir arama yapıp, random bir key değeri alabiliriz 
+    resave: true, //-> true dersek session üzerinde bir değişiklik olursa her seferinde değişiklik olsun ya da olmasın session bilgisinin kaydı tekrardan yapılabilir. Ya da false dersek bu özellik kapanır ve sadece bir değişiklik yaprığımızda bir güncelleme olur. 
+    saveUninitialized: false, // biz eğer true dersek bir session oluşturalım ya da oluşturmayalım hiç farketmez her her kullanıcıyı ziyaret bir kullanıcı için bir session deposunun server tarafında oluşturulacağını burada garanti altına almış oluyoruz. Tabikii burada false yazsakta otoamtik bir şekilde session deposu oluşturmasada biz session ile bir bilgi gönderdiğimiz zaman yine session deposu oluşmuş olacak.
+    cookie:{ //biz siteden çıktıktan bir süre sonra otomatik bir şekilde silinir. Biz bu cookie ye bir süre tanımlayabiliyoruz.
+        maxAge: 1000 * 60 * 60 * 24 // kullanıcı login olduktan 1 gün sonra cookie silecek bu sayede de kullancıyı uygulamada atacaktır. Kullanıcının tekrar login olması gerekir. 1000  dersek bir saniyelik bir cookie vermiş olurum. Aslında 1 saniyelik oturum süresi tanımlamış olurum. 
+    }
+}));
+
+/*
+    session içinde depoladığım veri kullanıcının tarayıcısında değil
+*/
 
 app.use(express.urlencoded())
 

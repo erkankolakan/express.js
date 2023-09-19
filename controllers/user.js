@@ -82,7 +82,7 @@ exports.index = async(req ,res) => {
                 blogs:blogs, 
                 categories:categories,
                 secilenCategory:null,
-                isAuth: req.cookies.isAuth //cookiden gelen kullanıcı giriş yapmış mı yapmamışmı bilgisi
+                isAuth: req.session.isAuth //eskiden cookie içerisinde alıyorduk artık. session içerisinden alacağız. 
             })
         }
         catch(err){
