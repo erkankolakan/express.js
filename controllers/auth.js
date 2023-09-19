@@ -21,27 +21,32 @@ exports.post_register = async(req , res) =>{
 
     const hashedPassword = await bcrypt.hash(password,10)
     /* ilk parametre neyi hasleyeceği ikincisi ise şifrenin zorluk seviyesi */
-
     try {
-        
-        await User.create({
-            fullname:name,
-            email: email,
-            password: hashedPassword
-        })
 
-        return res.redirect("login")
+        const user = await User.findOne({ where:{email:email} })
+
+        if(user){
+            req.session.message = {text: "Girdiğiniz email adresiyle daha önde kayıt olumuş." , class:"warning"};
+            return res.redirect("login")
+        }
+        
+        await User.create({ fullname:name, email: email, password: hashedPassword })
+
+        req.session.message={text: "Hesabınıza giriş yapabilirsiniz" , class:"success"}
+         return res.redirect("login")
         
     } catch (error) {
         console.log(error);
     }
-
 }
 
 exports.get_login = async(req , res) => {
+    const message = req.session.message; // mesajı ekranda gösterir
+    delete req.session.message //sonra ilgili sessionu siler destroy deseydik her session içindeki tüm değerleri silerdi.
     try {
         return res.render("auth/login" , {
-            title: "login"
+            title: "login",
+            message: message
         })
     } catch (error) {
         console.log(error);
@@ -74,7 +79,7 @@ exports.post_login = async(req , res) =>{
         if (!user) { //girilen email yanlış ise
             return res.render("auth/login", {
                 title:"login",
-                message:"email hatalı :("
+                message:{text:"email hatalı" , class:"danger"}
             })
         }
 
@@ -89,7 +94,7 @@ exports.post_login = async(req , res) =>{
 
         return res.render("auth/login", {
             title:"login",
-            message:"parola hatalı :("
+            message:{text:"Parola hatalı" , class:"danger"}
         })
         
     } catch (error) {

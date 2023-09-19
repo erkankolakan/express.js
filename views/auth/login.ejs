@@ -14,10 +14,9 @@
         <!-- bize değişkenlerin sorgusunu undefined ile yazıyoruz. -->
                 <% if (typeof message != "undefined") { %> 
                     
-                    <div class="alert alert-warning text-center ">
-                        <%= message %> 
+                    <div class="alert text-center alert-<%= message.class %> "> 
+                        <%= message.text %> 
                     </div>
-
                 <% } %>
                 
                 <form method="post" > 
