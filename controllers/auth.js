@@ -82,7 +82,8 @@ exports.post_login = async(req , res) =>{
 
         if(match){ 
     
-        req.session.isAuth=1   
+        req.session.isAuth=true;
+        req.session.fullname= user.fullname
         return res.redirect("/") 
         }
 

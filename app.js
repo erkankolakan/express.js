@@ -17,6 +17,7 @@ const authRoutes = require("./routes/auth")
 //custom modules
 const sequelize = require("./data/db") 
 const dummyData = require("./data/dummy-data") 
+const locals = require("./middlewares/locals")
 
 //tamplade engine
 app.set("view engine","ejs")
@@ -42,6 +43,10 @@ app.use(session({
         db: sequelize
     })
 }));
+
+
+/* Biz burada global bir alan oluşturacağız tek tek sayfalara bilgi göndermek yerine ihtiyacı olan burdan çekip alabilsin. Alsında ToolKit mantığı yatıyor. */
+app.use(locals) //global alan middleware/locals dosyası içinde fonksiyonu durur
 
 
 

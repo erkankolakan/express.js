@@ -81,8 +81,7 @@ exports.index = async(req ,res) => {
                 title:"Tüm Kurslar",
                 blogs:blogs, 
                 categories:categories,
-                secilenCategory:null,
-                isAuth: req.session.isAuth 
+                secilenCategory:null
             })
         }
         catch(err){
