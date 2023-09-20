@@ -1,7 +1,7 @@
-module.exports = (req ,res , next ) => {
-    res.locals.csrfToken = req.csrfToken();
-    next()
-}
+// module.exports = (req ,res , next ) => {
+//     res.locals.csrfToken = req.csrfToken();
+//     next()
+// }
 
 // locals içerisinde csrfToken adında bir değişken oluştur. Bu değişkeni gelen requesteki csurfToken fonksiyonundan al.
 
