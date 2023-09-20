@@ -4,6 +4,9 @@ const User = require("../models/user");  //user tablosu
 
 const bcrypt = require('bcrypt');
 
+const emailService = require("../helpers/send-mail");
+const config = require("../config");
+
 exports.get_register = async(req , res) => {
     try {
         return res.render("auth/register" , {
@@ -29,8 +32,14 @@ exports.post_register = async(req , res) =>{
             req.session.message = {text: "Girdiğiniz email adresiyle daha önde kayıt olumuş." , class:"warning"};
             return res.redirect("login")
         }
-        
-        await User.create({ fullname:name, email: email, password: hashedPassword })
+        const  newuser = await User.create({ fullname:name, email: email, password: hashedPassword })
+
+        emailService.sendMail({
+            from: config.email.from,  //kim tarafından gönderiliyor.
+            to: newuser.email,  //mail kime gönderilecek
+            subject: "Hesabınız oluşturuldu", //Mailin başlığı, konusu nedir.
+            text: "Hesabınız başarılı bir şekilde oluşturulmuştur.",
+        })
 
         req.session.message={text: "Hesabınıza giriş yapabilirsiniz" , class:"success"}
          return res.redirect("login")

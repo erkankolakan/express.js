@@ -73,18 +73,14 @@ app.use(userRoutes);
     Category.belongsToMany(Blog , {through: "blogCategories"});
 
 (async () => {
-    // await sequelize.sync({force: true});
-    // await dummyData()
+    await sequelize.sync({force: true});
+    await dummyData()
 })();
 
 
     app.listen(3000 , () => {
         console.log("Server started on port 3000");
     })
-
-
-
-
 
         // //ilişkiler
     // //one to many (bire çok ilişki)
