@@ -27,6 +27,7 @@ app.set("view engine","ejs")
 const Category = require("./models/category")
 const Blog = require("./models/blog")
 const User = require("./models/user")   
+const Role = require("./models/role")   
 
 
 //middleware
@@ -71,6 +72,11 @@ app.use(userRoutes);
 
     Blog.belongsToMany(Category , {through: "blogCategories"});  
     Category.belongsToMany(Blog , {through: "blogCategories"});
+
+    Role.belongsToMany(User , {through: "userRoles"});
+    User.belongsToMany(Role , {through: "userRoles"}); //-> aralarında çoka çok bir ilişki kurmuş oluyoruz.
+
+
 
 (async () => {
     // await sequelize.sync({force: true});

@@ -3,6 +3,7 @@ const Blog = require("../models/blog")
 
 const slugiField = require("../helpers/slugfield")
 const User = require("../models/user")
+const Role = require("../models/role")
 
 const bcrypt = require('bcrypt');
 
@@ -13,6 +14,29 @@ const bcrypt = require('bcrypt');
 
     if (count == 0) {
     
+        const users = await User.bulkCreate([
+            {fullname: "erkan kolakan" , email: "erkankolakanz@gmail.com" , password: await bcrypt.hash("kolakan34",10)},
+            {fullname: "ahmet kaya" , email: "ahmetkaya@gmail.com" , password: await bcrypt.hash("kaya34",10)},
+            {fullname: "memo kaya" , email: "memo@gmail.com" , password: await bcrypt.hash("kaya34",10)},
+            {fullname: "ibo kaya" , email: "ibo@gmail.com" , password: await bcrypt.hash("kaya34",10)},
+            {fullname: "taha kaya" , email: "taha@gmail.com" , password: await bcrypt.hash("kaya34",10)},
+        ]);
+
+
+        const roles = await Role.bulkCreate([
+            {rolename: "admin"}, //yönetici
+            {rolename: "moderator"}, //blog yazarı
+            {rolename: "guest"} //misafir
+        ])
+
+        await users[0].addRole(roles[0]);  //-> moderator 
+                                                            //-> 0. index hem moderator hemde admin
+        await users[0].addRole(roles[1]);  //-> admin 
+        await users[1].addRole(roles[1]);  //-> admin 
+        await users[2].addRole(roles[1]);  //-> admin
+
+        await users[3].addRole(roles[2]);  //-> guest
+        await users[4].addRole(roles[2]);  //-> guest
 
         const categories = await Category.bulkCreate([ 
             {name:"Web Geliştirme" , url:slugiField("Web Geliştirme")},
@@ -20,10 +44,6 @@ const bcrypt = require('bcrypt');
             {name:"Programlama" , url:slugiField("Programlama")},
         ])
 
-        const users = await User.bulkCreate([
-            {fullname: "erkan kolakan" , email: "erkankolakanz@gmail.com" , password: await bcrypt.hash("kolakan34",10)},
-            {fullname: "ahmet kaya" , email: "ahmetkaya@gmail.com" , password: await bcrypt.hash("kaya34",10)},
-        ]);
 
         const blogs = await Blog.bulkCreate([
             {
