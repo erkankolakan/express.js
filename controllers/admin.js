@@ -1,5 +1,7 @@
 const Blog = require("../models/blog")
 const Category = require("../models/category")
+const Role = require("../models/role")
+const User = require("../models/user")
 const fs = require("fs")
 const {Op} = require("sequelize")  
 const sequelize = require("../data/db")
@@ -341,6 +343,35 @@ exports.get_categories = async(req ,res) => {
             categories:categories ,
             action: req.query.action,
             categoryid: req.query.categoryid 
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}  
+
+
+exports.get_roles = async(req ,res) => {
+
+    try {
+        const roles = await Role.findAll({
+/*İlgili kolonları seçiyoruz, kolonları seçerken role.id role.rolename si ayrıca o role ait olan kaç tane kullanıcı var bu bilgiyide biz count fonksiyonu aracılığıyla sayacağız. sayacak olacağımız yerde gelen userlerin altındaki id bilgisinin kolonunu sayacak ve bu değeri user_count olarak geri döndürecek bize. */
+     attributes: {
+         include: ["role.id" , "role.rolename" , [sequelize.fn("COUNT" , sequelize.col("users.id")) , "user_count"]] 
+     },
+     include:[ //ilişkili olan modeli getirelim  
+         {model: User , attributes:["id"]}
+         //burada model bilgimiz user, Yani her role ait olan user bilgisi bize gelicek. Ayrıca userın sadece id bilgisi gelecek.
+     ],
+     group:[ //gelen role kayıtlarının id değerlerine göre bunları gruplayıp bulacağız. Yani admin grubu altında olan user bilgileri,guest rolu altında olan kullanıcı bilgileri şeklinde gruplamamız gerekir.
+          "role.id" //bu kısımda gruplamak önemli grupladıktan sonra altındaki user bilgilerini sayıyor. 
+     ],
+     raw:true,
+     includeIgnoreAttributes:false //-> bunu yazmazsak gruplama aşamasında hata veriyor.
+})
+
+        res.render("admin/role-list", {
+            title: "role listesi",
+            roles: roles
         })
     } catch (error) {
         console.log(error);
