@@ -3,3 +3,4 @@ module.exports = (req , res , next) => {
     res.locals.fullname = req.session.fullname
     next()
 }
+

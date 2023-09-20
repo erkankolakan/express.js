@@ -43,10 +43,11 @@ exports.post_register = async(req , res) =>{
 exports.get_login = async(req , res) => {
     const message = req.session.message; // mesajı ekranda gösterir
     delete req.session.message //sonra ilgili sessionu siler destroy deseydik her session içindeki tüm değerleri silerdi.
+
     try {
         return res.render("auth/login" , {
             title: "login",
-            message: message
+            message: message,
         })
     } catch (error) {
         console.log(error);

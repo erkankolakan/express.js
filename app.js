@@ -5,6 +5,7 @@ const app = express();
 const cookieParser = require("cookie-parser") //cookie
 const session = require("express-session") //session
 const SequelizeStroe = require("connect-session-sequelize")(session.Store)
+const csurf = require("tiny-csrf");
 
 //node modules
 const path = require("path") 
@@ -30,7 +31,7 @@ const User = require("./models/user")
 
 //middleware
 app.use(express.urlencoded())
-app.use(cookieParser())
+app.use(cookieParser("b42d4f3a6e8c7a5f1f9e3a2f4b3d7c1a"))
 
 app.use(session({                    
     secret:"0ade738c-2251-433f-8482-68ae2c6aa6b6", 
@@ -44,12 +45,17 @@ app.use(session({
     })
 }));
 
+app.use(locals)
 
-/* Biz burada global bir alan oluşturacağız tek tek sayfalara bilgi göndermek yerine ihtiyacı olan burdan çekip alabilsin. Alsında ToolKit mantığı yatıyor. */
-app.use(locals) //global alan middleware/locals dosyası içinde fonksiyonu durur
+//csurf'u secction ve middlewarelerin hemen altınada çağırıyoruz burası önemli. Ya session veya cookie yi kullanıyor zaten.
+/*CSFR mantığı form da ve serverde bir benzersiz bir token olaması ve bunların eşleşiyor olması önemlidir. Yani ben serverdan formu talep ettim tekrar post ettiğimde ben get ile bana getirilen token bilgisi olması gerekir. Tekrar post ettiğimde server tarafındaki token ile karşılatırılması lazım. Bu sayede bizim formun güzenliğini sağlıyor olmamız gerekir.*/
+app.use(
+    csurf(
+      "8fe3d57e9e7c4a1b59f6af34d3b16c2d", // secret -- must be 32 bits or chars in length
 
-
-
+    )
+  );
+  
 app.use("/libs" , express.static(path.join(__dirname,"node_modules")))
 app.use("/static", express.static(path.join(__dirname,"public")))    
 
