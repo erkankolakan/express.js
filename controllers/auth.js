@@ -1,11 +1,11 @@
 /* Authentication, bu dosya bizim için controllers olacak. */
 
 const User = require("../models/user");  //user tablosu
-
 const bcrypt = require('bcrypt');
-
 const emailService = require("../helpers/send-mail");
 const config = require("../config");
+
+const cryto = require("crypto") //crypro node.js içerisinde olan bir yapı zaten. Direk kullanılabilir.
 
 exports.get_register = async(req , res) => {
     try {
@@ -110,4 +110,60 @@ exports.post_login = async(req , res) =>{
     } catch (error) {
         console.log(error);
     }
-  }
+}
+
+exports.get_reset = async(req , res) => {
+
+    const message = req.session.message
+    delete req.session.message
+
+    try {
+        return res.render("auth/reset-password" , {
+            title: "şifreni yenile",
+            message:message
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.post_reset = async(req , res) => {
+
+    const email = req.body.email;
+    try {
+
+        var token = cryto.randomBytes(32).toString("hex") //-> token bilgisini oluşturduk
+        //-> 32 bitlik ve stringe çevrilmiş ve hexedebile de bir sayı dizisi alıyoruz.
+        //-> biz email ile bir token göndereceğiz.
+    
+        const user = await User.findOne({where:{ email: email }}) //-> kullanıcının girdiği email adresi
+    
+        if (!user) {  //kayıt eşleşmiyorsa gerekli hatalar.
+            req.session.message = { text: "Girdiğiniz bilgilere ait bir hesap bulunamadı.", class:"danger"};
+            return res.redirect("reset-password")
+        }
+
+        //kayıt varsa.
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + (1000 * 60 * 60) //şimdiki sürenin üstüne 1 saat ekle. 1 saatlik bir token
+        user.save() //üste yazmış olduklarımızı veritabanına kayıt et. 
+
+        emailService.sendMail({
+            from: config.email.from,  //kim tarafından gönderiliyor.
+            to:email,  //mail kime gönderilecek
+            subject: "Resetleme Şifreniz", //Mailin başlığı, konusu nedir.
+            html: `
+            <p>Parolanızı sıfırlamak için aşağıdaki linke tıklayınız.</p>
+            <p>
+                <a href="http://127.0.0.1:3000/account/reset-password/${token}" a> Parolanı sıfırla </a>
+            </p>
+            `
+        })
+
+        req.session.message= {text: "Parolanızı sıfırlamak için epost adresinizi kontol ediniz", class:"success"}
+        res.redirect("login")
+
+    } catch (error) {
+        console.log(error);
+    }
+}

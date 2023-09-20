@@ -1,5 +1,4 @@
 // User bilgilerini depolamak için user adında yeni bir tablo oluşturuyoruz.
-
 const { Model } = require("sequelize");
 const  sequelize  = require("../data/db");
 const  DataTypes  = require("sequelize");
@@ -18,9 +17,16 @@ const User = sequelize.define("user" ,{
     password:{
         type: DataTypes.STRING,
         allowNull: false
+    },
+    resetToken:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    resetTokenExpiration:{
+        type: DataTypes.STRING,
+        allowNull: true
     }
 
-    
 },{ timestamps: true })  
 
 module.exports = User;

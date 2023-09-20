@@ -73,8 +73,8 @@ app.use(userRoutes);
     Category.belongsToMany(Blog , {through: "blogCategories"});
 
 (async () => {
-    await sequelize.sync({force: true});
-    await dummyData()
+    // await sequelize.sync({force: true});
+    // await dummyData()
 })();
 
 
