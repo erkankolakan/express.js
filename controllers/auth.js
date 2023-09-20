@@ -4,6 +4,7 @@ const User = require("../models/user");  //user tablosu
 const bcrypt = require('bcrypt');
 const emailService = require("../helpers/send-mail");
 const config = require("../config");
+const {Op} = require("sequelize")
 
 const cryto = require("crypto") //crypro node.js içerisinde olan bir yapı zaten. Direk kullanılabilir.
 
@@ -16,6 +17,7 @@ exports.get_register = async(req , res) => {
         console.log(error);
     }
 }
+
 exports.post_register = async(req , res) =>{
 
     const name = req.body.name;
@@ -63,16 +65,6 @@ exports.get_login = async(req , res) => {
     }
 }
 
-exports.get_logout = async(req , res) => {
-    try {
-        await req.session.destroy() //cookie bilgisi silinir.
-        return res.redirect("/account/login")
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 exports.post_login = async(req , res) =>{
 
     const email = req.body.email;
@@ -107,6 +99,16 @@ exports.post_login = async(req , res) =>{
             message:{text:"Parola hatalı" , class:"danger"}
         })
         
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.get_logout = async(req , res) => {
+    try {
+        await req.session.destroy() //cookie bilgisi silinir.
+        return res.redirect("/account/login")
+
     } catch (error) {
         console.log(error);
     }
@@ -155,7 +157,7 @@ exports.post_reset = async(req , res) => {
             html: `
             <p>Parolanızı sıfırlamak için aşağıdaki linke tıklayınız.</p>
             <p>
-                <a href="http://127.0.0.1:3000/account/reset-password/${token}" a> Parolanı sıfırla </a>
+                <a href="http://127.0.0.1:3000/account/new-password/${token}" a> Parolanı sıfırla </a>
             </p>
             `
         })
@@ -167,3 +169,65 @@ exports.post_reset = async(req , res) => {
         console.log(error);
     }
 }
+
+exports.get_newpassword = async(req , res) => {
+
+    const token = req.params.token  //url nin içindeki token bilgisini alıcaz ve veri tabanına bakıcaz böyle bir url var mı diye.
+    
+    try {
+        const user = await User.findOne({
+            where: {
+                resetToken : token,
+                resetTokenExpiration: {
+                    [Op.gt]:Date.now() //Op.gt -> şuanki zaman veri tabandaki zamandan daha büyük olsun diyoru.
+                }
+            }
+        })
+
+        return res.render("auth/new-password" , {
+            title: "new password",
+            token:token,
+            userId:user.id // parolayı güncellerken userId kontrolü de yapacağız. 
+
+        })
+
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.post_newpassword = async(req , res) => {
+
+    const token = req.body.token;
+    const userId = req.body.userId;
+    const newpassword = req.body.password;
+
+    try {
+
+        const user = await User.findOne({
+            where: {
+                resetToken : token,
+                resetTokenExpiration: {
+                    [Op.gt]:Date.now() //Op.gt -> şuanki zaman veri tabandaki zamandan daha büyük olsun diyoru.
+                },
+                id:userId
+            }
+        })
+
+        user.password = await bcrypt.hash(newpassword ,10) //gelen şifreyi hashliyoruz
+        user.resetToken = null ;
+        user.resetTokenExpiration=null;
+        await user.save()         //yeni şifre bilgisi dataBaseye eklendi
+
+        req.session.message = {text: "parolanız güncellendi" , class:"success"};
+        return res.redirect("login")
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+

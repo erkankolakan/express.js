@@ -14,10 +14,11 @@ router.post("/login" , authController.post_login)
 router.get("/reset-password" ,  authController.get_reset)
 router.post("/reset-password" , authController.post_reset)
 
-router.get("/logout" ,  authController.get_logout)
+//mail adresimize bir token bilgisi talep ettik ve email adresimize gelen adrese tıkladığımız zaman kullanıcının karşısına da bir sayfa ör/new-password diye bir sayfa getireceğiz.
 
-/*
-    Fark ettiysek sadece GET işelemlerine bu TOKENİ verdik çünkü biz formu getirirken token geliyor. post ederken zaten bize gelen tokeni gönderiyoruz.
-*/
+router.get("/new-password/:token" ,  authController.get_newpassword) //newpassword için bir token bilgisi tanımlayalım 
+router.post("/new-password" , authController.post_newpassword)
+
+router.get("/logout" ,  authController.get_logout)
 
 module.exports = router
