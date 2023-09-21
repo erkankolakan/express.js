@@ -425,4 +425,30 @@ exports.roles_remove = async(req ,res) => {
     } catch (error) {
         console.log(error);
     }
-}  
+}
+
+
+exports.get_user = async (req, res) =>{
+
+    /* Mantık basit users dan id fullname email bilgisini alıyoruz. Bunları alırken aynı zamanda usersla ilgi olan Rolleri de al ama Role in sadece rolename değperini al. */
+
+    try {
+        const users = await User.findAll({
+            attributes: ["id","fullname","email"],  
+            include:{
+                model:Role,
+                attributes:["rolename"]
+            }
+        })
+
+        res.render("admin/user-list",{
+            title: "user list",
+            users: users
+        })
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+
