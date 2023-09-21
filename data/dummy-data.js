@@ -29,11 +29,10 @@ const bcrypt = require('bcrypt');
             {rolename: "guest"} //misafir
         ])
 
-        await users[0].addRole(roles[0]);  //-> moderator 
-                                                            //-> 0. index hem moderator hemde admin
-        await users[0].addRole(roles[1]);  //-> admin 
-        await users[1].addRole(roles[1]);  //-> admin 
-        await users[2].addRole(roles[1]);  //-> admin
+        await users[0].addRole(roles[0]);  //->  admin
+
+        await users[1].addRole(roles[1]);  //-> moderator
+        await users[2].addRole(roles[1]);  //-> moderator
 
         await users[3].addRole(roles[2]);  //-> guest
         await users[4].addRole(roles[2]);  //-> guest
@@ -54,6 +53,7 @@ const bcrypt = require('bcrypt');
                 resim:"1.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:4
             },
             {
                 baslik:"Python ile Sıfırdan İleri Seviye Python Programlama",
@@ -63,6 +63,8 @@ const bcrypt = require('bcrypt');
                 resim:"2.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:4
+
             },
             {
                 baslik:"Node.js ile Sıfırdan İleri Seviye Web Geliştirme",
@@ -72,6 +74,8 @@ const bcrypt = require('bcrypt');
                 resim:"3.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:4
+
             },
             {
                 baslik:"66666666666666666666666666666666666666666666",
@@ -81,6 +85,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:4
+
             },
             {
                 baslik:"555555555555555555555555555555555555555",
@@ -90,6 +96,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:4
+
             },
             {
                 baslik:"44444444444444444444444444444444444444",
@@ -99,6 +107,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:2
+
             },
             {
                 baslik:"333333333333333333333333333333333",
@@ -108,6 +118,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:2
+
             },
             {
                 baslik:"222222222222222222222222222222222",
@@ -117,6 +129,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:2
+
             },
             {
                 baslik:"111111111111111111111111111111111111111111",
@@ -126,6 +140,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:1
+
             },
             {
                 baslik:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -135,6 +151,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:1
+
             },
             {
                 baslik:"cccccccccccccccccccccccccccccccce",
@@ -144,6 +162,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:3
+
             },
             {
                 baslik:"ssssssssssssssssssssssssssssss",
@@ -153,6 +173,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:3
+
             },
             {
                 baslik:"aaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -162,6 +184,8 @@ const bcrypt = require('bcrypt');
                 resim:"4.jpg",
                 anasayfa:true,
                 onay:true,
+                userId:3
+
             }
         ])
 

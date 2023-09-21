@@ -89,9 +89,9 @@ exports.post_login = async(req , res) =>{
 
         if(match){ 
         req.session.isAuth=true;
-        req.session.fullname= user.fullname
+        req.session.fullname= user.fullname;
         const url = req.query.returnUrl || "/"
-        return res.redirect(url) 
+        return res.redirect(url)
         }
 
         return res.render("auth/login", {

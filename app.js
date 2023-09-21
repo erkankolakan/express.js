@@ -31,7 +31,7 @@ const Role = require("./models/role")
 
 
 //middleware
-app.use(express.urlencoded())
+app.use(express.urlencoded()) //-> Gelen isteklerin body si içindeki verilerini çözme ve JavaScript nesnelerine dönüştürür !!!  
 app.use(cookieParser("b42d4f3a6e8c7a5f1f9e3a2f4b3d7c1a"))
 
 app.use(session({                    

@@ -451,4 +451,66 @@ exports.get_user = async (req, res) =>{
 
 }
 
+exports.get_user_edit = async (req, res) =>{
+    const userid = req.params.userid
 
+    /* Bize paramsdan gelen id ye sahip olan user gelecek o gelirken tanında bu user a ailt olan rollerin id değerleri gelecek. */
+
+    try {
+        const user = await User.findOne({
+            where: { id:userid },
+            include: {model:Role  , attributes:["id"]}
+        })
+
+        const roles = await Role.findAll()
+
+        res.render("admin/user-edit",{
+            title: "user edit",
+            user: user,
+            roles: roles
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.post_user_edit = async (req, res) =>{
+    const userid = req.body.userid;
+    const fullname = req.body.fullname;
+    const email = req.body.email;
+    const roleIds = req.body.roles; //tüm seçilen id bilgileri
+
+    try {
+        const user = await User.findOne({
+            where: { id:userid },
+            include: {model:Role  , attributes:["id"]}
+        });
+        
+        if(user){
+            user.fullname = fullname;
+            user.email = email ;
+
+            if (roleIds == undefined) {//roleId dizisi undedined ise hiçbirşey seçilmemiştir. Bu yüzden dolayı da ilgili userın tüm rollerini sil derim.
+                await user.removeRoles(user.roles)
+            }else{
+                await user.removeRoles(user.roles) //eğer birşey seçmişse tekrardan siler en baştan silerim.
+                const selectedRoles = await Role.findAll({
+                    where:{
+                        id:{
+                            [Op.in] : roleIds
+//vermiş olduğum dizi içerisindeki roleIds lerle eşleşen kayıtları al. Örneğin 1, 2 bilgisiyle eşleşen kayıtları alacak ve veri tabanına userın o role sahip olduğunu yazdıracağız. 
+                        }
+                    }
+                });
+                await user.addRoles(selectedRoles) //seçilen bilgileri userın Rolesına a eklemiş olduk
+            }
+
+            await user.save()
+            return res. redirect("/admin/users")
+    }
+        return res. redirect("/admin/users")
+
+    } catch (error) {
+        console.log(error);
+    }
+}
