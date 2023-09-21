@@ -71,25 +71,29 @@ exports.post_login = async(req , res) =>{
     const password = req.body.password;
 
     try {
-
         const user = await User.findOne({
             where:{
                 email:email 
             }
         })
-
         if (!user) { //girilen email yanlış ise
             return res.render("auth/login", {
                 title:"login",
                 message:{text:"email hatalı" , class:"danger"}
             })
         }
-
         const match = await bcrypt.compare(password , user.password)
 
         if(match){ 
+        const userRoles = await user.getRoles({
+//kullanıcının user Rollerini alalım login olan kullanıcının getRols diyerek bilgilerini alalım.
+            attributes:["rolename"],
+            raw:true
+        })
+        req.session.roles = userRoles.map((role) => role["rolename"]); //geriye ["admin","moderator"] dizisini döndürür.
         req.session.isAuth=true;
         req.session.fullname= user.fullname;
+        req.session.userid = user.id; //kullanıcı login olduğu zamani session içerisine userdi değişkenini user in id değerini atıyoruz.
         const url = req.query.returnUrl || "/"
         return res.redirect(url)
         }

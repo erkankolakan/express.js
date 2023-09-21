@@ -12,9 +12,13 @@ const slugField = require("../helpers/slugfield")
 exports.get_blog_delete = async(req, res) =>{
 
     const blogid = req.params.blogid
+    const userid = req.session.userid
+
 
     try {
-        const blog = await Blog.findByPk(blogid)
+        const blog = await Blog.findOne({
+            id: blogid , userId:userid
+        })
 
         if (blog) {
             res.render("admin/blog-delete",{
@@ -104,6 +108,7 @@ exports.post_blog_create = async (req, res) => {
     const resim = req.file.filename; 
     const anasayfa = req.body.anasayfa == "on" ? 1:0 ; 
     const onay = req.body.onay == "on" ? 1:0 ;
+    const userid = req.session.userid;
 
     try {
         console.log(resim)
@@ -114,7 +119,8 @@ exports.post_blog_create = async (req, res) => {
             aciklama:aciklama,
             resim:resim,
             anasayfa:anasayfa,
-            onay:onay
+            onay:onay,
+            userId:userid
         }) 
         res.redirect("/admin/blogs?action=create"); 
 
@@ -149,12 +155,16 @@ exports.post_category_create = async (req, res) => {
 exports.get_blog_edit = async(req ,res) => { 
 
     const blogid = req.params.blogid 
+    const userid = req.session.userid
+
 
     try {
 
         const blog = await Blog.findOne({
             where:{
-                id : blogid            
+                id : blogid,
+                userId : userid  //userid yi sorgulama nedenimiz. Birinin yazdığı bir blogu başka kullanıcı düzenliyemiyor olması gerekir.
+                      
             },
             include:{
                 model:Category,
@@ -191,8 +201,8 @@ exports.post_blog_edit = async(req ,res) => {
     const url = req.body.url;
     const kategoriIds = req.body.categories;
     let resim = req.body.resim;
-    console.log(kategoriIds , "xxxxxxxxxxxxxxxxxxxx");
- 
+    const userid = req.session.userid
+
 
     if (req.file) {
         resim = req.file.filename;
@@ -208,10 +218,10 @@ exports.post_blog_edit = async(req ,res) => {
 
 
     try {
-        
         const blog = await Blog.findOne({
             where:{
-                id : blogid            
+                id : blogid,
+                userId:userid  // bu şekilde userid değerini de sorgulamalıyız ki birinin yazdığı blogu bir başkası değiştiremesin
             },
             include:{ 
                 model:Category,
@@ -259,7 +269,6 @@ exports.post_blog_edit = async(req ,res) => {
         console.log(error);
     }
 } 
-
 
 exports.get_category_remove = async(req , res) => {
 
@@ -312,16 +321,23 @@ exports.post_category_edit = async(req ,res) => {
 }  
 
 exports.get_blogs =  async(req ,res) => {
+    const userid = req.session.userid;
+    const isModerator = req.session.roles.includes("moderator"); //includes ile moderator rolüne sahip mi sorusunu soralım. Moderator roles dizisi içinde varsa bize true değerini döndürecek.
+    const isAdmin = req.session.roles.includes("admin");
 
     try {
-        const blogs = await Blog.findAll({   
-            attributes:["id", "baslik", "altbaslik", "resim"],
-            include: {             
-                model:Category,    
-                attributes:["name"]
-            }
-        }) 
-        console.log(blogs.categories);
+        const blogs = await Blog.findAll({ 
+            attributes: ["id","baslik","altbaslik","resim"],
+            include: {
+                model: Category,
+                attributes: ["name"]
+            },
+//herbir kolonun userId kolonu ile gelen userid değeriyle eşleşen değerleri al.
+//gelen kullanıcı isModerator ve isAdmin değilse yani kullanıcı moderatörse sorgulama yapacağız. Burada aslında admin rolünde alan birine bir filitreleme olmadan tüm listeler gözükecektir.
+            where: isModerator && !isAdmin ? { userId: userid } : null
+        })
+
+        
         res.render("admin/blog-list", {
             title: "Yeni Blog Ekle",
             blogs:blogs ,
@@ -348,7 +364,6 @@ exports.get_categories = async(req ,res) => {
         console.log(error);
     }
 }  
-
 
 exports.get_roles = async(req ,res) => {
     try {
@@ -426,7 +441,6 @@ exports.roles_remove = async(req ,res) => {
         console.log(error);
     }
 }
-
 
 exports.get_user = async (req, res) =>{
 

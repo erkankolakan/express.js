@@ -189,20 +189,19 @@ const bcrypt = require('bcrypt');
             }
         ])
 
-        await categories[0].addBlog(blogs[0]);
-
-        await blogs[0].addCategory(categories[1]);
+    await categories[0].addBlog(blogs[0]);
+    await blogs[0].addCategory(categories[1]);
     await categories[0].addBlog(blogs[2]);
     await categories[0].addBlog(blogs[3]);
     await categories[0].addBlog(blogs[4]);
     await categories[0].addBlog(blogs[5]);
     await categories[0].addBlog(blogs[6]);
-    await categories[0].addBlog(blogs[7]);
-    await categories[0].addBlog(blogs[8]);
-    await categories[0].addBlog(blogs[9]);
-    await categories[0].addBlog(blogs[10]);
-    await categories[1].addBlog(blogs[2]);
-    await categories[0].addBlog(blogs[1]);
+    await categories[1].addBlog(blogs[7]);
+    await categories[1].addBlog(blogs[8]);
+    await categories[1].addBlog(blogs[9]);
+    await categories[1].addBlog(blogs[10]);
+    await categories[2].addBlog(blogs[2]);
+    await categories[2].addBlog(blogs[1]);
     await categories[2].addBlog(blogs[3]);
 
 
