@@ -351,7 +351,6 @@ exports.get_categories = async(req ,res) => {
 
 
 exports.get_roles = async(req ,res) => {
-
     try {
         const roles = await Role.findAll({
 /*İlgili kolonları seçiyoruz, kolonları seçerken role.id role.rolename si ayrıca o role ait olan kaç tane kullanıcı var bu bilgiyide biz count fonksiyonu aracılığıyla sayacağız. sayacak olacağımız yerde gelen userlerin altındaki id bilgisinin kolonunu sayacak ve bu değeri user_count olarak geri döndürecek bize. */
@@ -368,11 +367,61 @@ exports.get_roles = async(req ,res) => {
      raw:true,
      includeIgnoreAttributes:false //-> bunu yazmazsak gruplama aşamasında hata veriyor.
 })
-
         res.render("admin/role-list", {
             title: "role listesi",
             roles: roles
         })
+    } catch (error) {
+        console.log(error);
+    }
+}
+exports.get_role_edit = async(req ,res) => {
+
+    const roleid = await req.params.roleid;
+    try {
+
+        const role = await Role.findByPk(roleid); 
+        const users = await role.getUsers();    //ilgili role ait user bilgilerinide alalım 
+//burada aldığımız role bir obje ve obje üzerinden getUsers adında bir method otomatik bir şekilde otomatik bir şekilde oluşuyor. User bilgilerini bu sayede alabiliriz.
+
+        if(role) {
+            return res.render("admin/role-edit",{
+                title: role.rolename,
+                role: role,
+                users: users
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}  
+
+exports.post_role_edit = async(req ,res) => {
+
+    const roleid = req.body.roleid;
+    const rolename = req.body.rolename;
+    try {
+        await Role.update({rolename: rolename} ,{
+            where: {
+                id: roleid
+            }
+        })
+        return res.redirect("/admin/roles")
+        
+    } catch (error) {
+        console.log(error);
+    }
+}  
+
+exports.roles_remove = async(req ,res) => {
+    const roleid = req.body.roleid;
+    const userid = req.body.userid;
+
+    try {
+        await sequelize.query(`delete from userRoles where userId=${userid} and roleId=${roleid}`);
+        //klasik SQL sorgusu ile silme işlemi yapmış olduk
+        return res.redirect("/admin/roles/"+ roleid);
+
     } catch (error) {
         console.log(error);
     }

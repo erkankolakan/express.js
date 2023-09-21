@@ -39,8 +39,12 @@ router.get( "/categories", isAuth , adminController.get_categories)
 
 router.get("/roles"  , isAuth ,  adminController.get_roles)  //->
 
-// router.get("/roles/:roleid" , isAuth , adminController.get_role_edite) //->         
-// router.post("/roles/remove" , isAuth  , adminController.roles_remove) //->
+router.get("/roles/:roleid" , isAuth , adminController.get_role_edit) //->
+
+router.post("/roles/remove" , isAuth  , adminController.roles_remove) //-> burada hiyerarşı oldukça önemlidir. Biz /roles/:roleid bundan önce yazmış olsaydık sayı karşıladığı için direk oraya gidecekti ve katagoriden çıkarma işlemi yapılamayacakto !!!
+
+router.post("/roles/:roleid" , isAuth , adminController.post_role_edit) //->
+
 
 
 module.exports = router
