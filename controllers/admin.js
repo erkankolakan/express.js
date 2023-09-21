@@ -13,11 +13,11 @@ exports.get_blog_delete = async(req, res) =>{
 
     const blogid = req.params.blogid
     const userid = req.session.userid
-
+    const isAdmin = req.session.roles.includes("admin")
 
     try {
         const blog = await Blog.findOne({
-            id: blogid , userId:userid
+        where: isAdmin ? { id: blogid } : { id: blogid , userId:userid }
         })
 
         if (blog) {
@@ -156,16 +156,13 @@ exports.get_blog_edit = async(req ,res) => {
 
     const blogid = req.params.blogid 
     const userid = req.session.userid
-
+    const isAdmin = req.session.roles.includes("admin")
 
     try {
-
         const blog = await Blog.findOne({
-            where:{
-                id : blogid,
-                userId : userid  //userid yi sorgulama nedenimiz. Birinin yazdığı bir blogu başka kullanıcı düzenliyemiyor olması gerekir.
-                      
-            },
+
+    //isAdmin kullanıcı gelmişse bize bu durumda kullanıcı flitrelemene gerek yok. biz adminiz istediğimiz bloga istediğimiz müdahaleyi yapabilmeliyiz. ama bize bir moderator geldiyse kullanıcıya göre yetki ver.
+            where: isAdmin ? {id : blogid} : { id : blogid, userId : userid,},
             include:{
                 model:Category,
                 attributes:["id"] 
@@ -173,8 +170,6 @@ exports.get_blog_edit = async(req ,res) => {
         })
 
         const categories = await Category.findAll() //burada da veri tabanındaki tüm kategoriler.
-
-
         if (blog) {
              res.render("admin/blog-edit",{ 
                 title: blog.dataValues.baslik,
@@ -183,9 +178,7 @@ exports.get_blog_edit = async(req ,res) => {
             }
             )
         }
-
-
-        res.redirect("admin/blogs") 
+        res.redirect("/admin/blogs") 
 c
     } catch (error) {
         console.log(error);
