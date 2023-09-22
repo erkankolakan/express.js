@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const  sequelize  = require("../data/db");
 const  DataTypes  = require("sequelize");
+const bcrypt = require('bcrypt');
 
 
 const User = sequelize.define("user" ,{  
@@ -46,7 +47,16 @@ const User = sequelize.define("user" ,{
     },
     password:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate:{
+            notEmpty:{
+                msg:"Lütfen bir parola değeri giriniz"
+            },
+            len:{
+                args:[5.10],
+                msg:"parola 5-10 değerili uzunluğunda olmalıdır"
+            }
+        }
     },
     resetToken:{
         type: DataTypes.STRING,
@@ -57,6 +67,14 @@ const User = sequelize.define("user" ,{
         allowNull: true
     }
 
-},{ timestamps: true })  
+},{ timestamps: true });
+
+User.afterValidate(async (user) => {
+    //user kullanıcının oluşturmuş olduğu user modelidir.
+    user.password = await bcrypt.hash(user.password,10)
+    //userdan gelen modeli hashle daha sonra yine user içine at
+    //biz şifreyi hashledikten sonra validate oldğu için afterValidate yani ilk validate yapalım ondan sonra şifreyi hashle. Adam şifre yazmazsa boş değer gelicek onu hashliyicek bu yüzden de şifre değeri girilmiş giibi gözükücek
+
+})
 
 module.exports = User;

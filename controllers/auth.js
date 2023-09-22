@@ -24,10 +24,9 @@ exports.post_register = async(req , res) =>{
     const email = req.body.email;
     const password = req.body.password;
 
-    const hashedPassword = await bcrypt.hash(password,10)
     /* ilk parametre neyi hasleyeceği ikincisi ise şifrenin zorluk seviyesi */
     try {
-        const  newuser = await User.create({ fullname:name, email: email, password: hashedPassword })
+        const  newuser = await User.create({ fullname:name, email: email, password: password })
 
         emailService.sendMail({
             from: config.email.from,  //kim tarafından gönderiliyor.
