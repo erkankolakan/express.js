@@ -245,15 +245,13 @@ exports.post_blog_edit = async(req ,res) => {
 
     const anasayfa = req.body.anasayfa == "on" ? "1" : "0" ; 
     const onay = req.body.onay == "on" ? "1" : "0" ; 
+    const isAdmin = req.session.roles.includes("admin")
 
 
 
     try {
         const blog = await Blog.findOne({
-            where:{
-                id : blogid,
-                userId:userid  // bu şekilde userid değerini de sorgulamalıyız ki birinin yazdığı blogu bir başkası değiştiremesin
-            },
+            where: isAdmin ? {id : blogid} : {id: blogid , userId: userid},
             include:{ 
                 model:Category,
                 attributes:["id"] 

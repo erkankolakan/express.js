@@ -38,7 +38,7 @@ exports.post_register = async(req , res) =>{
 
         req.session.message={text: "Hesabınıza giriş yapabilirsiniz" , class:"success"}
          return res.redirect("login")
-        
+
     } catch (err) {
         let msg = "";
  

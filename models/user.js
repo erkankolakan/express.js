@@ -14,9 +14,18 @@ const User = sequelize.define("user" ,{
         // her hangi bir alana validation kuralı eklemek için validation değerlerini kullanmamız gerekir.
             notEmpty: { //boş bir string gönderilemez
                 msg:"ad soyad girmelisiniz"
-            }
+            },
+                
+            isFullname(value){ //biz full nameyi kontrol edicez bize value değeri gelicek. Tabiki gelen value kullanıcının fullnameye atamış olduğu değere denk geliyor.
+                if (value.split(" ").length < 2) {
+                    throw new Error("Lütfen ad ve soyadınızı giriniz.")
+                }
         }
+        },
+
+
     },
+
     email:{
         type: DataTypes.STRING,
         allowNull: false,

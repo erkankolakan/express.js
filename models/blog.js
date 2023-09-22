@@ -32,9 +32,20 @@ const Blog = sequelize.define("blog" , {
         allowNull:false
     }
 },{
-    timestamps: true,   
+    timestamps: true,
+    validate:{
+        checkValidOnay(){
+            if (this.anasayfa && !this.onay) {
+                throw new Error("Anasayfaya aldığınız bloğu onaylamadınız");
+            }
+//Model seviyesinde validation işlemi yaptık.  Burda value değerini this.xxx yazarak alabiliriz. 2. parametreye bu değerleri verebiliriz
+
+    
+        }
+    }
 }
 )
+
 
  module.exports = Blog;
 
