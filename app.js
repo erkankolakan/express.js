@@ -63,8 +63,12 @@ app.use("/static", express.static(path.join(__dirname,"public")))
 
 app.use("/admin",adminRoutes); 
 app.use("/account", authRoutes);  
-    
 app.use(userRoutes); 
+app.use("/500" , (req, res, next) =>{
+    res.status(500).render("error/500" , {title: "hata sayfası"})
+    next()
+/*Bize başarılı bir sonuç geliyorsa 200 kodu http status kodu olarak gider. Bu zaten default olarak gider. Ama biz bir hata gönderiyorsak hata kodunu da göndermemiz gerekir. Serverdan kaynaklanan bir hata olduğunu belirtmek için bir durum kodu gönderiyoruz  */
+})
 
 
     Blog.belongsTo(User); 

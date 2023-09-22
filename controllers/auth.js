@@ -14,7 +14,7 @@ exports.get_register = async(req , res) => {
             title: "register"
         })
     } catch (err) {
-        console.log(err);
+        res.redirect("/500")
     }
 }
 
@@ -39,20 +39,27 @@ exports.post_register = async(req , res) =>{
          return res.redirect("login")
 
     } catch (err) {
+
         let msg = "";
+ 
+        if (err.name == "SequelizeValidationError" || err.name == "SequelizeUniqueConstraintError") {
  
         for (let e of err.errors ) {
             msg+= e.message + " "
         }
-
+        
         return res.render("auth/register" , {
             title: "register",
-            message: {
-                text: msg,
-                class:"danger"
-            }
+            message: { text: msg, class:"danger" } 
         })
+
+    }else{
+        res.redirect("/500") //üsteki hatalardan farklı bir hata gelirse kullanıcıyı hata sayfasına göndereceğiz.
     }
+
+
+}
+
 }
 
 exports.get_login = async(req , res) => {
