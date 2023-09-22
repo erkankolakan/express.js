@@ -105,13 +105,34 @@ exports.post_blog_create = async (req, res) => {
     const baslik = req.body.baslik;
     const altbaslik = req.body.altbaslik;
     const aciklama = req.body.aciklama;
-    const resim = req.file.filename; 
     const anasayfa = req.body.anasayfa == "on" ? 1:0 ; 
     const onay = req.body.onay == "on" ? 1:0 ;
     const userid = req.session.userid;
 
+    let resim = "" //file bilgisi ilk başta boş geçelim çünkü file değeri girilmezse file üretilmez bu da bir hataya neden olur. Zaten bir file bilgisi gelirse de zaten aşağıda resmin içini req.file.filename ile dolduruyoruz.
+
     try {
-        console.log(resim)
+
+        if (baslik == "") {
+            throw new Error("Başlık boş geçilemez")
+    // Errodan türetilmiş bir obje tanımlıyoruz
+        }
+
+        if (baslik.length < 5 || baslik.length > 20) {
+            throw new Error("Başlık değeri 5-20 karekter aralığında olmalıdır.")
+        }
+
+        if (aciklama == "") {
+            throw new Error("Açıklama boş geçilemez")
+        }
+
+        if (req.file) {
+            resim = req.file.filename
+            fs.unlink("./public/images" + req.body.resim , err => {
+                console.log(err)
+            })
+        }
+
         await Blog.create({
             baslik:baslik,
             altbaslik:altbaslik,
@@ -124,8 +145,25 @@ exports.post_blog_create = async (req, res) => {
         }) 
         res.redirect("/admin/blogs?action=create"); 
 
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        let hataMesaji = ""; //sayfaya gönderilecek olan mesaj. Bizim bunu err objesi içinde alamamız lazım. Hata bize geldiği zaman gerçekten bir javascript hatası olduğunu kontorl etmemiz gerekir. Çünkü yarın öbürgün başka hatalarımızda gelecek bize
+
+        if (err instanceof Error) { //gelen err nin Errordan türetilen bir obje olup olmadığını kontrol ediyoruz. Yukarıda da biz zaten errordan türetilmiş bir obje tanıtıyoruz zaten.
+            hataMesaji += err.message,    //-> yukarıda tanımlamış olduğum mesaj içerisine err den gelen mesaj parametresini ekliyoruz.    
+
+            res.render("admin/blog-create",{
+                title: "category sileme işlemleri",
+                categories: await Category.findAll(),
+                message: {
+                    text: hataMesaji, class: "danger"},
+                values:{
+                    baslik:baslik,
+                    altbaslik:altbaslik,
+                    aciklama:aciklama
+                }
+                    
+            })
+        }
     }
 }
 
