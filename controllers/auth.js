@@ -18,13 +18,14 @@ exports.get_register = async(req , res) => {
     }
 }
 
-exports.post_register = async(req , res) =>{
+exports.post_register = async(req , res , next) =>{
 
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
 
     /* ilk parametre neyi hasleyeceği ikincisi ise şifrenin zorluk seviyesi */
+
     try {
         const  newuser = await User.create({ fullname:name, email: email, password: password })
 
@@ -54,7 +55,11 @@ exports.post_register = async(req , res) =>{
         })
 
     }else{
-        res.redirect("/500") //üsteki hatalardan farklı bir hata gelirse kullanıcıyı hata sayfasına göndereceğiz.
+        next(err)
+        /* next parametresi aracılığıyla ben geriye bir res döndürmek yerine o anda başlayıp devam eden req içerisine hata bilgisini direk ekleyebilirim.
+    catch a göndermiş olduğumuz hatayı biz next e gönderiyoruz . Süreç bitmeden önce bu hata objesini alıp app.js de eklemiş olduğumuz middleware aracılığyla ele alabiliriz. Bu middlewarenin diğerlerinden farklı aldığı ilk parametre hata oluyor err. Yani 4 tane parametre alan middleware bizim için hatayı ele alan bir middleware oluyor. (err, req, res, next)
+        biz redirect yapmadığımız için hata sayfasıa gider ama url account/register olarak kalır. Bunu hangi sayfada yaparsa o sayfanın linkinde kalır.
+    */
     }
 
 
@@ -71,8 +76,8 @@ exports.get_login = async(req , res) => {
             title: "login",
             message: message,
         })
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -114,8 +119,9 @@ exports.post_login = async(req , res) =>{
             message:{text:"Parola hatalı" , class:"danger"}
         })
         
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
+
     }
 }
 
@@ -124,8 +130,9 @@ exports.get_logout = async(req , res) => {
         await req.session.destroy() //cookie bilgisi silinir.
         return res.redirect("/account/login")
 
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
+
     }
 }
 
@@ -139,8 +146,9 @@ exports.get_reset = async(req , res) => {
             title: "şifreni yenile",
             message:message
         })
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
+
     }
 }
 
@@ -180,8 +188,9 @@ exports.post_reset = async(req , res) => {
         req.session.message= {text: "Parolanızı sıfırlamak için epost adresinizi kontol ediniz", class:"success"}
         res.redirect("login")
 
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
+
     }
 }
 
@@ -205,10 +214,8 @@ exports.get_newpassword = async(req , res) => {
             userId:user.id // parolayı güncellerken userId kontrolü de yapacağız. 
 
         })
-
-
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
     }
 }
 
@@ -238,8 +245,8 @@ exports.post_newpassword = async(req , res) => {
         req.session.message = {text: "parolanız güncellendi" , class:"success"};
         return res.redirect("login")
 
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        next(err)
     }
 }
 

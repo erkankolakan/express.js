@@ -64,9 +64,15 @@ app.use("/static", express.static(path.join(__dirname,"public")))
 app.use("/admin",adminRoutes); 
 app.use("/account", authRoutes);  
 app.use(userRoutes); 
-app.use("/500" , (req, res, next) =>{
-    res.status(500).render("error/500" , {title: "hata sayfası"})
-    next()
+
+app.use((err, req, res, next) =>{
+    console.log("loglama" , err.message); //==>> bu süreçte loglama yapılabilir. ör/ winston kütüphanesi bunun içindir. !!!! yada burada email işlemi yapabiliriz. Gelen hataları kendi email adresime gönderirim Bu sayede hataları öğrenedek uygulama üzerinde düzeltmeler yapılabilir.
+
+    next(err) // hatalarla işimiz bir alttaki middlewarede bitecek, o yüzden bura da next(err) diyerek bir sonraki middleware ye geç demiş oluyoruz. next derken içerisine err yazmamız gerekir çünkü biz next() dersek süreç devam eder bir sonraki middlewareye geç deriz ama hatayı silmiş oluruz.
+})
+
+app.use((err, req, res, next) =>{
+    res.status(500).render("error/500" , {title:"hata sayfası"})
 /*Bize başarılı bir sonuç geliyorsa 200 kodu http status kodu olarak gider. Bu zaten default olarak gider. Ama biz bir hata gönderiyorsak hata kodunu da göndermemiz gerekir. Serverdan kaynaklanan bir hata olduğunu belirtmek için bir durum kodu gönderiyoruz  */
 })
 
