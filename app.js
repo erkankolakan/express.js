@@ -19,6 +19,8 @@ const authRoutes = require("./routes/auth")
 const sequelize = require("./data/db") 
 const dummyData = require("./data/dummy-data") 
 const locals = require("./middlewares/locals")
+const log = require("./middlewares/log")
+const error = require("./middlewares/error-headling")
 
 //tamplade engine
 app.set("view engine","ejs")
@@ -65,16 +67,15 @@ app.use("/admin",adminRoutes);
 app.use("/account", authRoutes);  
 app.use(userRoutes); 
 
-app.use((err, req, res, next) =>{
-    console.log("loglama" , err.message); //==>> bu süreçte loglama yapılabilir. ör/ winston kütüphanesi bunun içindir. !!!! yada burada email işlemi yapabiliriz. Gelen hataları kendi email adresime gönderirim Bu sayede hataları öğrenedek uygulama üzerinde düzeltmeler yapılabilir.
-
-    next(err) // hatalarla işimiz bir alttaki middlewarede bitecek, o yüzden bura da next(err) diyerek bir sonraki middleware ye geç demiş oluyoruz. next derken içerisine err yazmamız gerekir çünkü biz next() dersek süreç devam eder bir sonraki middlewareye geç deriz ama hatayı silmiş oluruz.
+app.use("*" ,(req, res) =>{
+    res.status(404).render("error/404" , {title: "not found"})
 })
+// "*" vememizle şunu demiş olduk , yukarıda vermiş olduğumuz herhangi bir rooutes bizim talebimizi karşılamıyorsa gelen talep doğrultusunda 404 sayfasını kullanıcıya göndericem * yerine 404 de diyebiliriz
 
-app.use((err, req, res, next) =>{
-    res.status(500).render("error/500" , {title:"hata sayfası"})
-/*Bize başarılı bir sonuç geliyorsa 200 kodu http status kodu olarak gider. Bu zaten default olarak gider. Ama biz bir hata gönderiyorsak hata kodunu da göndermemiz gerekir. Serverdan kaynaklanan bir hata olduğunu belirtmek için bir durum kodu gönderiyoruz  */
-})
+
+app.use(log)  // hata ayıklama
+
+app.use(error)  // hata sayfası
 
 
     Blog.belongsTo(User); 

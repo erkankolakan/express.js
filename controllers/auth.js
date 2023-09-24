@@ -61,10 +61,7 @@ exports.post_register = async(req , res , next) =>{
         biz redirect yapmadığımız için hata sayfasıa gider ama url account/register olarak kalır. Bunu hangi sayfada yaparsa o sayfanın linkinde kalır.
     */
     }
-
-
 }
-
 }
 
 exports.get_login = async(req , res) => {

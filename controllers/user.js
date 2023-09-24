@@ -21,7 +21,7 @@ exports.blogs_details = async(req ,res) => {
             title: blog.baslik,
             blog: blog, 
         })}
-        res.redirect("/") 
+        res.redirect("/404") 
 
     } catch (error) {
         console.log(error);
